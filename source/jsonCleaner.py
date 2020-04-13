@@ -4,7 +4,7 @@
 # Will create our new file with only the data we need
 
 import json
-from source import jsonConverter
+import jsonConverter
 
 class json_clean(object):
 
@@ -71,7 +71,7 @@ class json_clean(object):
 
 if __name__ == '__main__':
     recipe_convert = jsonConverter.json_convert()
-    recipe_convert.set_file("full_format_recipes.json")
+    recipe_convert.set_file("source/full_format_recipes.json")
     recipe_convert.parse_file()
     cleaner = json_clean(recipe_convert)
     cleaner.clean_ingredients()

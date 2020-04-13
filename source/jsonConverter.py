@@ -26,5 +26,5 @@ class json_convert(object):
 
 if __name__ == '__main__':
     recipe_convert = json_convert()
-    recipe_convert.set_file("full_format_recipes.json")
+    recipe_convert.set_file("source/full_format_recipes.json")
     recipe_convert.parse_file()
