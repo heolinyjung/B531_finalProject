@@ -1,9 +1,12 @@
+# reference: https://linuxconfig.org/how-to-parse-data-from-json-into-python
+#            https://www.w3schools.com/python/python_json.asp
+
 import json
-import jsonConverter
 
 if __name__ == '__main__':
     with open('source/train.json') as f:
         train = json.load(f)
+        # train is now a dictionary with keys : 'id', 'cuisine', 'ingredients'
     with open('source/test.json') as f2:
         test = json.load(f2)
 
