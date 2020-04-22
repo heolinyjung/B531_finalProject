@@ -3,6 +3,9 @@ import numpy as np
 from sklearn.neural_network import MLPClassifier
 from sklearn.svm import SVC
 from sklearn.model_selection import KFold
+from sklearn.neighbors import KNeighborsClassifier
+
+
 
 
 
@@ -65,6 +68,25 @@ def MLP(X, y):
         classifier1.fit(X[train], y[train])
         print("MLP Prediction accuracy", classifier1.score(X[test], y[test]))
 
+def SVM(X, y):
+    classifier2 = SVC(kernel = 'rbf')
+
+    folding = KFold(n_splits=5)
+
+    for train, test in folding.split(X):
+        classifier2.fit(X[train], y[train])
+        print("SVM Prediction accuracy", classifier2.score(X[test], y[test]))
+
+def NearestNeighbor(X, y):
+    classifier1 = KNeighborsClassifier(n_neighbors = 25, weights = 'distance', algorithm = 'kd_tree')
+
+    folding = KFold(n_splits=5)
+
+    for train, test in folding.split(X):
+        classifier1.fit(X[train], y[train])
+        print("Nearest Neighbors Prediction accuracy", classifier1.score(X[test], y[test]))
+
+
 with open('train.json') as f:
     train = json.load(f)
         # train is now a dictionary with keys : 'id', 'cuisine', 'ingredients'
@@ -72,3 +94,14 @@ with open('test.json') as f2:
     test = json.load(f2)
 
 X, y = makeData(train)
+
+shortX = X[0:10000]
+shorty = y[0:10000]
+
+NearestNeighbor(shortX, shorty)
+
+'''
+MLP(X, y)
+
+SVM(shortX, shorty)
+'''
