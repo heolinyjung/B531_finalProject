@@ -41,6 +41,13 @@ if __name__ == '__main__':
     for ingredientCount in ingredientCounts.values():
         totalNumOfIngredients += ingredientCount
 
+    # get the numbers of unique ingredients that appear more than a certain number of times in the training dataset
+    filter = 5
+    ingredientAmountsBiggerThanFilter = 0
+    for ingredient in ingredientCounts:
+        if ingredientCounts.get(ingredient) >= filter:
+            ingredientAmountsBiggerThanFilter += 1
+
     # prints certain number of ingredients and how many times they appear in the training dataset
     # biased towards printing items with high number of appearances but not in a sorted type of way
     # change results to the number of ingredient and counts you want printed, change results to -1 for all
@@ -62,6 +69,7 @@ if __name__ == '__main__':
     print()
     print("# of total ingredients:", totalNumOfIngredients)
     print("# of unique ingredients:", len(ingredientCounts))
+    print("# of unique ingredients with amounts more than or equal to", filter, ":", ingredientAmountsBiggerThanFilter)
     print("# of each ingredient on average:", int(totalNumOfIngredients / len(ingredientCounts)))
     print("# of cusines:", len(cuisineCounts))
     print("# of training items:", len(train))
