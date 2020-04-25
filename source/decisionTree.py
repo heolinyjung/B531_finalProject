@@ -1,6 +1,7 @@
 import math
 import json
 import numpy as np
+import random
 
 """
 fills a dictionary with all the cuisine type and how many times they appear in the training dataset
@@ -161,6 +162,14 @@ def getCuisineOccurenceForAllIngredients(recipes):
 
     return cuisineOccurenceForAllIngredients
 
+# introduces feature randomness by giving the tree a random set of len(cuisines)/2 choices (unique) from the original
+def cuisineCountsWithFeatureRandomness(cuisineOccurenceForAllIngredients):
+    if len(cuisineOccurenceForAllIngredients) == 1:
+        return cuisineOccurenceForAllIngredients
+    else:
+        return random.sample(cuisineOccurenceForAllIngredients, len(cuisineOccurenceForAllIngredients)/2)
+
+
 class dTreeNode:
     # maybe add depth?
     # trueBranch (dTreeNode) the Node all recipes that DO have the ingredient in ingredientSplit will go to
@@ -178,11 +187,13 @@ class dTreeNode:
         # can maybe combine get cuisineAmounts into getCuisineOccurenceForAllIngredients
         cuisineCounts = getCuisineAmounts(recipes)
         cuisineOccurenceForAllIngredients = getCuisineOccurenceForAllIngredients(recipes)
+        # introduce feature randomness
+        cuisineOccurenceForAllIngredients = cuisineCountsWithFeatureRandomness(cuisineOccurenceForAllIngredients)
         if len(cuisineCounts) == 1:
             onlyCusisine = None
             for onlykey in cuisineCounts:
                 onlyCusisine = onlykey
-            return dTreeNode(cuisineClassification = onlyCusisine)
+            return dTreeNode(cuisineClassification=onlyCusisine)
         else:
             # gets the ingredient with the best info gain
             bestInfoGainIngredient = ("wazowski", -1)

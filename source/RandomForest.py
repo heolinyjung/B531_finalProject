@@ -15,6 +15,7 @@
 #
 # reference: https://towardsdatascience.com/understanding-random-forest-58381e0602d2
 import random
+from source.decisionTree import dTreeNode
 
 
 class RandomForest:
@@ -24,6 +25,7 @@ class RandomForest:
         self.dataset = dataset
         self.bags = []
         self.bag_data(self.dataset)
+        self.forest = []
         self.create_forest()
 
     # Takes in a list (dataset) and returns a number of "bags" of values from that list of the same size but of random
@@ -37,4 +39,7 @@ class RandomForest:
 
     # Creates the forest using bagged data and feature randomness
     def create_forest(self):
-        raise NotImplementedError
+        for i in range(self.tree_count):
+            new_tree = dTreeNode()
+            new_tree.decisionTree(self.bags[i])
+            self.forest.append(new_tree)
