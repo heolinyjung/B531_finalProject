@@ -43,3 +43,21 @@ class RandomForest:
             new_tree = dTreeNode()
             new_tree.decisionTree(self.bags[i])
             self.forest.append(new_tree)
+
+    # Tests a recipe by running the test algorithm for each tree and returning the classification with the highest count
+    def test_point(self, recipe):
+        results = {}
+        maxCuisine = ['', 0]
+        for i in self.forest:
+            cuisine = i.test_point(recipe)
+            if cuisine in results.keys():
+                results[cuisine] += 1
+                if results[cuisine] > maxCuisine[1]:
+                    maxCuisine[0] = cuisine
+                    maxCuisine[1] += 1
+            else:
+                results[cuisine] = 1
+                if maxCuisine[1] == 0:
+                    maxCuisine[0] = cuisine
+                    maxCuisine[1] = 1
+        return maxCuisine[0]

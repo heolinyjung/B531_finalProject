@@ -335,8 +335,8 @@ if __name__ == '__main__':
     print(decisionTree.calculateInformationGain(testInfoGain2, "eggs"))
     # ---------------------------------------------- Info Gain Tests -----------------------------------------------------
 
-    # ---------------------------------------------- Decision Tree Tests -----------------------------------------------------
-    with open('source/testDTree.json') as f:
+    # ---------------------------------------------- Decision Tree Train Tests -----------------------------------------------------
+    with open('testDTree.json') as f:
         train = json.load(f)
 
     """
@@ -364,3 +364,19 @@ if __name__ == '__main__':
     print("The start time is :", starttime)
     root.decisionTree(train)
     print("The time difference is :", timeit.default_timer() - starttime)
+
+    # ---------------------------------------------- Decision Tree Train Tests -----------------------------------------------------
+
+    # ---------------------------------------------- Decision Tree Test Tests -----------------------------------------------------
+
+    testTree = decisionTree.dTreeNode.decisionTree(testInfoGain)
+    newPoint = {
+        "id": 3123,
+        "cuisine": "greek",
+        "ingredients": [
+            "olive oil",
+            "eggs"
+        ]}
+    print(testTree.test_point(newPoint))
+
+    # ---------------------------------------------- Decision Tree Test Tests -----------------------------------------------------

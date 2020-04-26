@@ -164,10 +164,14 @@ def getCuisineOccurenceForAllIngredients(recipes):
 
 # introduces feature randomness by giving the tree a random set of len(cuisines)/2 choices (unique) from the original
 def cuisineCountsWithFeatureRandomness(cuisineOccurenceForAllIngredients):
-    if len(cuisineOccurenceForAllIngredients) == 1:
+    if len(cuisineOccurenceForAllIngredients.keys()) <= 1:
         return cuisineOccurenceForAllIngredients
     else:
-        return random.sample(cuisineOccurenceForAllIngredients, len(cuisineOccurenceForAllIngredients)/2)
+        randomFeatures = random.sample(list(cuisineOccurenceForAllIngredients.keys()), int(len(cuisineOccurenceForAllIngredients.keys()) / 2))
+        newDict = {}
+        for i in randomFeatures:
+            newDict[i] = cuisineOccurenceForAllIngredients[i]
+        return newDict
 
 
 class dTreeNode:
@@ -232,3 +236,12 @@ class dTreeNode:
                 self.trueBranch = dTreeNode.decisionTree(dTreeNode(), recipesWithIngredient)
                 self.falseBranch = dTreeNode.decisionTree(dTreeNode(), recipesWithoutIngredient)
                 return self
+
+    def test_point(self, recipe):
+        if self.cuisineClassification is not None:
+            return self.cuisineClassification
+        else:
+            if self.ingredientSplit in recipe['ingredients']:
+                return self.trueBranch.test_point(recipe)
+            else:
+                return self.falseBranch.test_point(recipe)
