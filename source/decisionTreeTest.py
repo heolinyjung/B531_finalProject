@@ -369,7 +369,8 @@ if __name__ == '__main__':
 
     # ---------------------------------------------- Decision Tree Test Tests -----------------------------------------------------
 
-    testTree = decisionTree.dTreeNode.decisionTree(testInfoGain)
+    testTree = decisionTree.dTreeNode()
+    testTree.decisionTree(testInfoGain)
     newPoint = {
         "id": 3123,
         "cuisine": "greek",

@@ -10,9 +10,9 @@ if __name__ == '__main__':
     # id is assigned to the recipe id (int)
     # cuisine is assigned to the cuisine type (string)
     # ingredients is assigned to the list of ingredients (list of strings)
-    with open('source/train.json') as f:
+    with open('train.json') as f:
         train = json.load(f)
-    with open('source/test.json') as f2:
+    with open('test.json') as f2:
         test = json.load(f2)
 
     # dicts of ingredients and cusisine counts, ingredient/cuisine (string) assigned to ingredient/cuisine count (int)
