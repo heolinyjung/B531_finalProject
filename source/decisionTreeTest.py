@@ -336,7 +336,7 @@ if __name__ == '__main__':
     # ---------------------------------------------- Info Gain Tests -----------------------------------------------------
 
     # ---------------------------------------------- Decision Tree Train Tests -----------------------------------------------------
-    with open('testDTree.json') as f:
+    with open('trainSmall.json') as f:
         train = json.load(f)
 
     """
@@ -369,6 +369,7 @@ if __name__ == '__main__':
 
     # ---------------------------------------------- Decision Tree Test Tests -----------------------------------------------------
 
+    # testing the test_point() function
     testTree = decisionTree.dTreeNode()
     testTree.decisionTree(testInfoGain)
     newPoint = {
@@ -379,5 +380,19 @@ if __name__ == '__main__':
             "eggs"
         ]}
     print(testTree.test_point(newPoint))
+
+    # testing the tree with full datasets
+    with open('test.json') as f:
+        test = json.load(f)
+
+    total = 0
+    correct = 0
+    for recipe in testInfoGain:
+        total += 1
+        result = root.test_point(recipe)
+        if result == recipe['cuisine']:
+            correct += 1
+
+    print("Percentage correct = " + str((correct/total) * 100) + "%")
 
     # ---------------------------------------------- Decision Tree Test Tests -----------------------------------------------------

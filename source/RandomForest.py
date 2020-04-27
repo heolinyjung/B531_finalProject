@@ -34,7 +34,7 @@ class RandomForest:
         if dataset is None:
             return False
         for i in range(self.tree_count):
-            self.bags.append(random.choices(dataset, len(dataset)))
+            self.bags.append(random.choices(dataset, k=len(dataset)))
         return True
 
     # Creates the forest using bagged data and feature randomness

@@ -1,0 +1,350 @@
+[
+  {
+    "id": 14202,
+    "cuisine": "southern_us",
+    "ingredients": [
+      "tea bags",
+      "ground black pepper",
+      "chicken thighs",
+      "light brown sugar",
+      "kosher salt",
+      "salt",
+      "rosemary sprigs",
+      "lemon",
+      "ice cubes",
+      "sweet onion",
+      "garlic cloves"
+    ]
+  },
+  {
+    "id": 10111,
+    "cuisine": "italian",
+    "ingredients": [
+      "garbanzo beans",
+      "large garlic cloves",
+      "plum tomatoes",
+      "orzo pasta",
+      "fresh parsley",
+      "grated parmesan cheese",
+      "rubbed sage",
+      "dried rosemary",
+      "olive oil",
+      "canned beef broth",
+      "onions"
+    ]
+  },
+  {
+    "id": 1128,
+    "cuisine": "italian",
+    "ingredients": [
+      "kale leaves",
+      "chicken noodle soup",
+      "cannellini beans"
+    ]
+  },
+  {
+    "id": 37109,
+    "cuisine": "french",
+    "ingredients": [
+      "dijon mustard",
+      "extra-virgin olive oil",
+      "flat leaf parsley",
+      "water",
+      "green onions",
+      "fresh lemon juice",
+      "capers",
+      "zucchini",
+      "garlic cloves",
+      "fresh basil leaves",
+      "olive oil",
+      "Italian parsley leaves",
+      "green beans"
+    ]
+  },
+  {
+    "id": 9952,
+    "cuisine": "italian",
+    "ingredients": [
+      "cherry tomatoes",
+      "black pepper",
+      "salt",
+      "balsamic vinegar",
+      "mozzarella cheese",
+      "fresh basil leaves"
+    ]
+  },
+  {
+    "id": 11164,
+    "cuisine": "italian",
+    "ingredients": [
+      "white onion",
+      "italian style rolls",
+      "provolone cheese",
+      "genoa salami",
+      "olive oil",
+      "sweet pepper",
+      "oregano",
+      "pepper",
+      "red wine vinegar",
+      "boiled ham",
+      "tomatoes",
+      "capicola",
+      "salt",
+      "iceberg lettuce"
+    ]
+  },
+  {
+    "id": 9852,
+    "cuisine": "mexican",
+    "ingredients": [
+      "chicken broth",
+      "tortillas",
+      "salt",
+      "fresh tomatoes",
+      "chicken breasts",
+      "onions",
+      "table cream",
+      "jalapeno chilies",
+      "garlic cloves",
+      "chiles",
+      "grating cheese"
+    ]
+  },
+  {
+    "id": 45574,
+    "cuisine": "greek",
+    "ingredients": [
+      "kosher salt",
+      "garlic",
+      "greek yogurt",
+      "cracked black pepper",
+      "english cucumber",
+      "shallots",
+      "dill",
+      "white vinegar",
+      "extra-virgin olive oil",
+      "fresh lemon juice"
+    ]
+  },
+  {
+    "id": 22581,
+    "cuisine": "french",
+    "ingredients": [
+      "granulated sugar",
+      "vanilla",
+      "chocolate sauce",
+      "milk",
+      "ricotta cheese",
+      "all-purpose flour",
+      "slivered almonds",
+      "large eggs",
+      "salt",
+      "orange zest",
+      "honey",
+      "butter",
+      "orange juice"
+    ]
+  },
+  {
+    "id": 9082,
+    "cuisine": "spanish",
+    "ingredients": [
+      "quail",
+      "raisins",
+      "dry white wine",
+      "garlic cloves",
+      "fennel bulb",
+      "extra-virgin olive oil",
+      "lemongrass",
+      "shallots",
+      "cinnamon sticks"
+    ]
+  },
+  {
+    "id": 30985,
+    "cuisine": "japanese",
+    "ingredients": [
+      "stock",
+      "vegetable oil",
+      "salt",
+      "dashi",
+      "caster",
+      "soy sauce",
+      "daikon",
+      "shiso",
+      "mirin",
+      "extra large eggs"
+    ]
+  },
+  {
+    "id": 42612,
+    "cuisine": "italian",
+    "ingredients": [
+      "navy beans",
+      "jalapeno chilies",
+      "diced celery",
+      "water",
+      "italian salad dressing mix",
+      "chopped cilantro fresh",
+      "cider vinegar",
+      "diced tomatoes",
+      "red bell pepper",
+      "olive oil",
+      "garlic cloves",
+      "sliced green onions"
+    ]
+  },
+  {
+    "id": 38754,
+    "cuisine": "japanese",
+    "ingredients": [
+      "dashi kombu",
+      "dried bonito flakes",
+      "water"
+    ]
+  },
+  {
+    "id": 45037,
+    "cuisine": "greek",
+    "ingredients": [
+      "water",
+      "large garlic cloves",
+      "dried currants",
+      "feta cheese",
+      "black pepper",
+      "swiss chard",
+      "olive oil",
+      "salt"
+    ]
+  },
+  {
+    "id": 33197,
+    "cuisine": "japanese",
+    "ingredients": [
+      "kosher salt",
+      "balsamic vinegar",
+      "white miso",
+      "freshly ground pepper",
+      "sugar",
+      "vegetable oil",
+      "branzino fillets",
+      "mirin",
+      "mixed greens"
+    ]
+  },
+  {
+    "id": 13005,
+    "cuisine": "chinese",
+    "ingredients": [
+      "green onions",
+      "white sugar",
+      "soy sauce",
+      "garlic",
+      "vegetable oil",
+      "sesame seeds",
+      "round steaks"
+    ]
+  },
+  {
+    "id": 18203,
+    "cuisine": "mexican",
+    "ingredients": [
+      "ketchup",
+      "avocado",
+      "carbonated beverages",
+      "fresh cilantro",
+      "saltines",
+      "cooked shrimp"
+    ]
+  },
+  {
+    "id": 10210,
+    "cuisine": "italian",
+    "ingredients": [
+      "barbecue sauce",
+      "yellow onion",
+      "prepared pizza crust",
+      "boneless skinless chicken breasts",
+      "Sargento® Traditional Cut Shredded Mozzarella Cheese",
+      "vegetable oil"
+    ]
+  },
+  {
+    "id": 38581,
+    "cuisine": "thai",
+    "ingredients": [
+      "chicken broth",
+      "erythritol",
+      "green onions",
+      "red bell pepper",
+      "fish sauce",
+      "lemon grass",
+      "garlic",
+      "galangal",
+      "kaffir lime leaves",
+      "lime juice",
+      "shallots",
+      "coconut milk",
+      "coconut oil",
+      "mushrooms",
+      "carrots",
+      "chicken"
+    ]
+  },
+  {
+    "id": 32489,
+    "cuisine": "chinese",
+    "ingredients": [
+      "soy sauce",
+      "dry sherry",
+      "black bean sauce",
+      "garlic",
+      "green onions",
+      "firm tofu",
+      "olive oil",
+      "ground pork"
+    ]
+  },
+  {
+    "id": 26647,
+    "cuisine": "mexican",
+    "ingredients": [
+      "cider vinegar",
+      "salt",
+      "cherry tomatoes",
+      "avocado",
+      "extra-virgin olive oil",
+      "pepper",
+      "cucumber"
+    ]
+  },
+  {
+    "id": 34240,
+    "cuisine": "british",
+    "ingredients": [
+      "tomatoes",
+      "white wine",
+      "whole milk",
+      "ice water",
+      "salt",
+      "asparagus tips",
+      "nutmeg",
+      "fresh chives",
+      "zucchini",
+      "butter",
+      "artichokes",
+      "tuna",
+      "black peppercorns",
+      "pepper",
+      "spring onions",
+      "portabello mushroom",
+      "all-purpose flour",
+      "medium eggs",
+      "capers",
+      "water",
+      "watercress",
+      "heavy cream",
+      "allspice berries"
+    ]
+  }
+]
