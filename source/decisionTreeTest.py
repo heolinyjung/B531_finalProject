@@ -330,13 +330,12 @@ if __name__ == '__main__':
         }
     ]
 
-    assert(decisionTree.calculateInformationGain(testInfoGain, "eggs") == 0.9709505944546685), decisionTree.calculateInformationGain(testInfoGain, "eggs")
-    print(decisionTree.calculateInformationGain(testInfoGain2, "olive oil"))
-    print(decisionTree.calculateInformationGain(testInfoGain2, "eggs"))
+    # assert(decisionTree.calculateInformationGain(testInfoGain, "eggs") == 0.9709505944546685), decisionTree.calculateInformationGain(testInfoGain, "eggs")
+    assert(decisionTree.calculateInformationGain(testInfoGain2, "eggs") == decisionTree.calculateInformationGain(testInfoGain2, "olive oil"))
     # ---------------------------------------------- Info Gain Tests -----------------------------------------------------
 
-    # ---------------------------------------------- Decision Tree Train Tests -----------------------------------------------------
-    with open('trainSmall.json') as f:
+    # ---------------------------------------------- Decision Tree Tests -----------------------------------------------------
+    with open('source/trainSmall.json') as f:
         train = json.load(f)
 
     """
@@ -355,23 +354,54 @@ if __name__ == '__main__':
 
     print("# of unique ingredients with amounts more than or equal to", filter, ":", ingredientAmountsBiggerThanFilter)
     """
-    decisionTree.filterIngredients(train, 5)
+
+    """
+    decisionTree.calculateInformationGainV2(train, "soy sauce")
+
+    recipesWithIngredient = []
+    recipesWithoutIngredient = []
+    for recipe in train:
+        if "soy sauce" in recipe.get("ingredients"):
+            recipesWithIngredient.append(recipe)
+        else:
+            recipesWithoutIngredient.append(recipe)
+
+    decisionTree.calculateInformationGainV2(recipesWithIngredient, "sesame oil")
+    decisionTree.calculateInformationGainV2(recipesWithoutIngredient, "jalapeno chilies")
+    """
+    decisionTree.filterIngredients(train, 10)
     decisionTree.putIngredientsInSets(train)
-    root = decisionTree.dTreeNode()
-    
+    root = decisionTree.decisionTreeNode()
+
     # convert to numpy arrays instead of python lists maybe?
     starttime = timeit.default_timer()
     print("The start time is :", starttime)
-    root.decisionTree(train)
+    root.makeDecisionTree(train)
     print("The time difference is :", timeit.default_timer() - starttime)
 
-    # ---------------------------------------------- Decision Tree Train Tests -----------------------------------------------------
+    with open('source/testSmall.json') as f:
+        test = json.load(f)
 
-    # ---------------------------------------------- Decision Tree Test Tests -----------------------------------------------------
+    total = 0
+    correct = 0
+    for recipe in test:
+        total += 1
+        result = root.test_point(recipe)
+        if result == recipe['cuisine']:
+            correct += 1
+
+    print("Percentage correct = " + str((correct/total) * 100) + "%")
+
+    # ---------------------------------------------- Decision Tree Tests -----------------------------------------------------
+    
+    # ---------------------------------------------- Decision Tree Train Tests -----------------------------------------------------
+    """
+    with open('source/trainSmall.json') as f:
+        train = json.load(f)
 
     # testing the test_point() function
-    testTree = decisionTree.dTreeNode()
-    testTree.decisionTree(testInfoGain)
+    testTree = decisionTree.decisionTreeNode()
+    testTree.makeDecisionTree(testInfoGain)
     newPoint = {
         "id": 3123,
         "cuisine": "greek",
@@ -382,7 +412,7 @@ if __name__ == '__main__':
     print(testTree.test_point(newPoint))
 
     # testing the tree with full datasets
-    with open('test.json') as f:
+    with open('source/test.json') as f:
         test = json.load(f)
 
     total = 0
@@ -394,5 +424,4 @@ if __name__ == '__main__':
             correct += 1
 
     print("Percentage correct = " + str((correct/total) * 100) + "%")
-
-    # ---------------------------------------------- Decision Tree Test Tests -----------------------------------------------------
+    """

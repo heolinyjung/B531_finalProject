@@ -1,14 +1,22 @@
-from source.RandomForest import *
+from RandomForest import *
+import decisionTree
 import json
+import timeit
 
 if __name__ == "__main__":
 
-    with open("trainSmall.json") as f:
+    with open("source/trainSmall.json") as f:
         train = json.load(f)
-    with open("testSmall.json") as y:
+    with open("source/testSmall.json") as y:
         test = json.load(y)
 
-    testForest = RandomForest(5, train)
+    # decisionTree.filterIngredients(train, 5)
+    # decisionTree.putIngredientsInSets(train)
+
+    starttime = timeit.default_timer()
+    print("The start time is :", starttime)
+    testForest = RandomForest(15, train)
+    print("The time difference is :", timeit.default_timer() - starttime)
 
     total = 0
     correct = 0

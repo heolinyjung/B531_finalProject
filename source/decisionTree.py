@@ -64,7 +64,7 @@ def ingredientOccurencesPerCuisineType(recipes, ingredient):
 # calculates the information gain of the set of recipes using the ingredient param as the target variable
 # recipes param same as getCuisineAmounts comment
 # O(1) if have the precomputations else O(yikes)
-def calculateInformationGain(recipes, ingredient, cuisineAmounts=None, ingredientinCuisineAmounts=None):
+def calculateInformationGainBad(recipes, ingredient, cuisineAmounts=None, ingredientinCuisineAmounts=None):
     totalRecipes = len(recipes)
     ingredientEntropy = 0
 
@@ -83,8 +83,11 @@ def calculateInformationGain(recipes, ingredient, cuisineAmounts=None, ingredien
         # !!!!!!!!!!!!!!!!!!!!! try .items()
         cuisineOccurences = cuisineCounts.get(cuisine)
         ingredientOccurences = ingredientinCuisineCounts.get(cuisine)
+
         if ingredientOccurences == None:
             ingredientOccurences = 0
+        elif ingredientOccurences > cuisineOccurences:
+            ingredientOccurences = cuisineOccurences
 
         if ingredientOccurences == 0 or cuisineOccurences - ingredientOccurences == 0:
             cuisineEntropy = 0
@@ -93,6 +96,27 @@ def calculateInformationGain(recipes, ingredient, cuisineAmounts=None, ingredien
         ingredientEntropy += (cuisineOccurences / totalRecipes) * cuisineEntropy
 
     return calculateEntropy(recipes, cuisineCounts) - ingredientEntropy
+
+def calculateInformationGain(recipes, ingredient, cuisineAmounts=None):
+    totalRecipes = len(recipes)
+
+    if cuisineAmounts == None:
+        cuisineCounts = getCuisineAmounts(recipes)
+    else:
+        cuisineCounts = cuisineAmounts
+
+    recipesWithIngredient = []
+    recipesWithoutIngredient = []
+    for recipe in recipes:
+        if ingredient in recipe.get("ingredients"):
+            recipesWithIngredient.append(recipe)
+        else:
+            recipesWithoutIngredient.append(recipe)
+
+    # the entropys of the two sets after the ingredient split times their size ratios
+    weightedEntropyAfterSplit = ((len(recipesWithIngredient) / totalRecipes) * calculateEntropy(recipesWithIngredient)) + ((len(recipesWithoutIngredient) / totalRecipes) * calculateEntropy(recipesWithoutIngredient))
+
+    return calculateEntropy(recipes, cuisineCounts) - weightedEntropyAfterSplit
 
 # O(ingredients)
 def getUniqueIngredients(recipes):
@@ -142,6 +166,7 @@ def filterIngredients(recipes, filter):
 
 # returns a dictionary of all unique ingredients mapped to a dictionary of each cuisine type mapped to the
 # number of times that ingredients appears in a recipe of that cuisine type
+# e.g. {carrots : {mexican : 3, chinese : 1, british : 6} }
 # O(ingredients)
 def getCuisineOccurenceForAllIngredients(recipes):
     cuisineOccurenceForAllIngredients = dict()
@@ -174,9 +199,7 @@ def cuisineCountsWithFeatureRandomness(cuisineOccurenceForAllIngredients):
             newDict[i] = cuisineOccurenceForAllIngredients[i]
         return newDict
 
-
-class dTreeNode:
-    # maybe add depth?
+class decisionTreeNode:
     # trueBranch (dTreeNode) the Node all recipes that DO have the ingredient in ingredientSplit will go to
     # falseBranch (dTreeNode) the Node all recipes that DON'T have the ingredient in ingredientSplit will go to
     # ingredientSplit (string) is the ingredient being split at the Node
@@ -187,23 +210,25 @@ class dTreeNode:
         self.ingredientSplit = ingredientSplit
         self.cuisineClassification = cuisineClassification
 
-    # O(nodes(2recipes + ingredients + uIngredients))
-    def decisionTree(self, recipes):
+    # time - O(nodes(2recipes + ingredients + uIngredients))
+    # space - O(nodes * (2cuisine types + unique ingredients + recipes))
+    def makeDecisionTree(self, recipes):
         # can maybe combine get cuisineAmounts into getCuisineOccurenceForAllIngredients
         cuisineCounts = getCuisineAmounts(recipes)
         cuisineOccurenceForAllIngredients = getCuisineOccurenceForAllIngredients(recipes)
         # introduce feature randomness
-        cuisineOccurenceForAllIngredients = cuisineCountsWithFeatureRandomness(cuisineOccurenceForAllIngredients)
+        # cuisineOccurenceForAllIngredients = cuisineCountsWithFeatureRandomness(cuisineOccurenceForAllIngredients)
         if len(cuisineCounts) == 1:
             onlyCusisine = None
+            # ugly but works, try to fix
             for onlykey in cuisineCounts:
                 onlyCusisine = onlykey
-            return dTreeNode(cuisineClassification=onlyCusisine)
+            return decisionTreeNode(cuisineClassification = onlyCusisine)
         else:
             # gets the ingredient with the best info gain
             bestInfoGainIngredient = ("wazowski", -1)
             for ingredient in cuisineOccurenceForAllIngredients:
-                infoGain = calculateInformationGain(recipes, ingredient, cuisineCounts, cuisineOccurenceForAllIngredients.get(ingredient))
+                infoGain = calculateInformationGain(recipes, ingredient, cuisineCounts)
                 if infoGain > bestInfoGainIngredient[1]:
                     bestInfoGainIngredient = (ingredient, infoGain)
 
@@ -232,10 +257,10 @@ class dTreeNode:
                 for cuisine in cuisineAmounts:
                     if cuisineAmounts.get(cuisine) > majorityCuisine[1]:
                         majorityCuisine = (cuisine, cuisineAmounts.get(cuisine))
-                return dTreeNode(cuisineClassification = majorityCuisine[0])
+                return decisionTreeNode(cuisineClassification = majorityCuisine[0])
             else:
-                self.trueBranch = dTreeNode.decisionTree(dTreeNode(), recipesWithIngredient)
-                self.falseBranch = dTreeNode.decisionTree(dTreeNode(), recipesWithoutIngredient)
+                self.trueBranch = decisionTreeNode.makeDecisionTree(decisionTreeNode(), recipesWithIngredient)
+                self.falseBranch = decisionTreeNode.makeDecisionTree(decisionTreeNode(), recipesWithoutIngredient)
                 return self
 
     def test_point(self, recipe):

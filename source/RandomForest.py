@@ -15,7 +15,7 @@
 #
 # reference: https://towardsdatascience.com/understanding-random-forest-58381e0602d2
 import random
-from source.decisionTree import dTreeNode
+from decisionTree import decisionTreeNode
 
 
 class RandomForest:
@@ -40,8 +40,8 @@ class RandomForest:
     # Creates the forest using bagged data and feature randomness
     def create_forest(self):
         for i in range(self.tree_count):
-            new_tree = dTreeNode()
-            new_tree.decisionTree(self.bags[i])
+            new_tree = decisionTreeNode()
+            new_tree.makeDecisionTree(self.bags[i])
             self.forest.append(new_tree)
 
     # Tests a recipe by running the test algorithm for each tree and returning the classification with the highest count
