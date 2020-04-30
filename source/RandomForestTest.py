@@ -5,9 +5,9 @@ import timeit
 
 if __name__ == "__main__":
 
-    with open("source/trainSmall.json") as f:
+    with open("trainSmall.json") as f:
         train = json.load(f)
-    with open("source/testSmall.json") as y:
+    with open("testSmall.json") as y:
         test = json.load(y)
 
     # decisionTree.filterIngredients(train, 5)
@@ -15,7 +15,7 @@ if __name__ == "__main__":
 
     starttime = timeit.default_timer()
     print("The start time is :", starttime)
-    testForest = RandomForest(15, train)
+    testForest = RandomForest(10, train)
     print("The time difference is :", timeit.default_timer() - starttime)
 
     total = 0

@@ -335,7 +335,7 @@ if __name__ == '__main__':
     # ---------------------------------------------- Info Gain Tests -----------------------------------------------------
 
     # ---------------------------------------------- Decision Tree Tests -----------------------------------------------------
-    with open('source/trainSmall.json') as f:
+    with open('trainSmall.json') as f:
         train = json.load(f)
 
     """
@@ -379,7 +379,7 @@ if __name__ == '__main__':
     root.makeDecisionTree(train)
     print("The time difference is :", timeit.default_timer() - starttime)
 
-    with open('source/testSmall.json') as f:
+    with open('testSmall.json') as f:
         test = json.load(f)
 
     total = 0

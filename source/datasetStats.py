@@ -15,7 +15,7 @@ if __name__ == '__main__':
     with open('test.json') as f2:
         test = json.load(f2)
 
-    # dicts of ingredients and cusisine counts, ingredient/cuisine (string) assigned to ingredient/cuisine count (int)
+    # dicts of ingredients and cuisine counts, ingredient/cuisine (string) assigned to ingredient/cuisine count (int)
     cuisineCounts = dict()
     ingredientCounts = dict()
 
@@ -51,8 +51,9 @@ if __name__ == '__main__':
     # prints certain number of ingredients and how many times they appear in the training dataset
     # biased towards printing items with high number of appearances but not in a sorted type of way
     # change results to the number of ingredient and counts you want printed, change results to -1 for all
-    print("Ingredients and the number of times they appear in the training dataset")
     results = 20
+    '''
+    print("Ingredients and the number of times they appear in the training dataset")
     counter = 0
     for ingredient, amount in ingredientCounts.items():
         print(ingredient, amount)
@@ -61,12 +62,23 @@ if __name__ == '__main__':
             break
     print()
 
+    '''
+
     # prints all cuisine types and number of times they appear in total in the training dataset
     print("Types of cuisine and the number of times they appear in the training dataset")
     for cuisine, amount in cuisineCounts.items():
         print(cuisine, amount)
 
     print()
+
+    # prints highest # (= results) of ingredients with the highest counts.
+    for i in range(results):
+        largestCountIngredient = max(ingredientCounts, key=ingredientCounts.get)
+        print(largestCountIngredient, ingredientCounts[largestCountIngredient])
+        ingredientCounts.pop(largestCountIngredient)
+
+    print()
+
     print("# of total ingredients:", totalNumOfIngredients)
     print("# of unique ingredients:", len(ingredientCounts))
     print("# of unique ingredients with amounts more than or equal to", filter, ":", ingredientAmountsBiggerThanFilter)
