@@ -1,10 +1,109 @@
 import math
 import json
-import decisionTree
+from decisionTree import *
 import timeit
 import numpy as np
+import sys
 
 if __name__ == '__main__':
+    # ---------------------------------------------- Decision Tree Tests -----------------------------------------------------
+    with open('source/trainMedium.json') as f:
+        train = json.load(f)
+
+    # can mess with the filter, the higher it is the quicker the trees are to make
+    # when lower doesn't really impact accuracy
+    filterIngredients(train, 10)
+    # put all the ingredent lists in sets, speeds everything alot
+    putIngredientsInSets(train)
+
+    root1 = decisionTreeNode()
+    root2 = decisionTreeNode()
+    root3 = decisionTreeNode()
+    
+    starttime = timeit.default_timer()
+    root1.makeDecisionTree(train)
+    print("The time difference is :", timeit.default_timer() - starttime)
+    
+    starttime = timeit.default_timer()
+    root3.makeDecisionTree2(train)
+    print("The time difference is :", timeit.default_timer() - starttime)
+
+    starttime = timeit.default_timer()
+    root2.makeDecisionTreeWithEntropy(train)
+    print("The time difference is :", timeit.default_timer() - starttime)
+    
+    with open('source/testMedium.json') as f:
+        test = json.load(f)
+    
+    total = 0
+    correct = 0
+    for recipe in test:
+        total += 1
+        result = root1.test_point(recipe)
+        if result == recipe['cuisine']:
+            correct += 1
+    print("Percentage correct = " + str((correct/total) * 100) + "%")
+
+    total = 0
+    correct = 0
+    for recipe in test:
+        total += 1
+        result = root3.test_point(recipe)
+        if result == recipe['cuisine']:
+            correct += 1
+    print("Percentage correct = " + str((correct/total) * 100) + "%")
+
+    total = 0
+    correct = 0
+    for recipe in test:
+        total += 1
+        result = root2.test_point(recipe)
+        if result == recipe['cuisine']:
+            correct += 1
+    print("Percentage correct = " + str((correct/total) * 100) + "%")
+
+    """
+    # need to use when doing full dataset or else will hit max recusion depth
+    # doesnt cause crash on my machine but may on yours, care
+    limit = 8
+    sys.setrecursionlimit(10**limit)
+    print(limit)
+    """
+
+    """
+    decisionTree.calculateInformationGainV2(train, "soy sauce")
+
+    recipesWithIngredient = []
+    recipesWithoutIngredient = []
+    for recipe in train:
+        if "soy sauce" in recipe.get("ingredients"):
+            recipesWithIngredient.append(recipe)
+        else:
+            recipesWithoutIngredient.append(recipe)
+
+    decisionTree.calculateInformationGainV2(recipesWithIngredient, "sesame oil")
+    decisionTree.calculateInformationGainV2(recipesWithoutIngredient, "jalapeno chilies")
+    """
+
+    """
+    # filter function testing
+    filter = 5
+    decisionTree.filterIngredients(train, filter)
+    ingredientCounts = decisionTree.getIngredientCounts(train)
+    dick = dict()
+    for x in ingredientCounts:
+        if ingredientCounts.get(x) < filter:
+            dick[x] = ingredientCounts.get(x)
+
+    ingredientAmountsBiggerThanFilter = 0
+    for ingredient in ingredientCounts:
+        if ingredientCounts.get(ingredient) < filter:
+            ingredientAmountsBiggerThanFilter += 1
+
+    print("# of unique ingredients with amounts more than or equal to", filter, ":", ingredientAmountsBiggerThanFilter)
+    """
+    # ---------------------------------------------- Decision Tree Tests -----------------------------------------------------
+    """
     # ---------------------------------------------- Entropy Tests -----------------------------------------------------
     testEntropyAllSame = [
         {
@@ -176,13 +275,15 @@ if __name__ == '__main__':
         }
     ]
 
-    assert(decisionTree.calculateEntropy(testEntropyThreeClasses) == 1.5709505944546684), decisionTree.calculateEntropy(testEntropyThreeClasses)
-    assert(decisionTree.calculateEntropy(testEntropyAllSame) == 0), decisionTree.calculateEntropy(testEntropyAllSame)
-    assert(decisionTree.calculateEntropy(testEntropyMaxEntropy) == 1), decisionTree.calculateEntropy(testEntropyMaxEntropy)
-    assert(decisionTree.calculateEntropy(testEntropyMaxEntropyThreeClasses) == 1.584962500721156), decisionTree.calculateEntropy(testEntropyMaxEntropyThreeClasses)
+    assert(calculateEntropy(testEntropyThreeClasses) == 1.5709505944546684), calculateEntropy(testEntropyThreeClasses)
+    assert(calculateEntropy(testEntropyAllSame) == 0), calculateEntropy(testEntropyAllSame)
+    assert(calculateEntropy(testEntropyMaxEntropy) == 1), calculateEntropy(testEntropyMaxEntropy)
+    assert(calculateEntropy(testEntropyMaxEntropyThreeClasses) == 1.584962500721156), calculateEntropy(testEntropyMaxEntropyThreeClasses)
+    """
     # ---------------------------------------------- Entropy Tests -----------------------------------------------------
 
     # ---------------------------------------------- Info Gain Tests -----------------------------------------------------
+    """
     testInfoGain = [
         {
         "id": 10259,
@@ -330,69 +431,17 @@ if __name__ == '__main__':
         }
     ]
 
-    # assert(decisionTree.calculateInformationGain(testInfoGain, "eggs") == 0.9709505944546685), decisionTree.calculateInformationGain(testInfoGain, "eggs")
-    assert(decisionTree.calculateInformationGain(testInfoGain2, "eggs") == decisionTree.calculateInformationGain(testInfoGain2, "olive oil"))
+    testIt = getUniqueIngredients(testInfoGain)
+    counts = getIngredientCounts(testInfoGain)
+
+    for ing in testIt:
+        print("bad:", calculateInformationGainBad(testInfoGain, ing), "good", calculateInformationGain(testInfoGain, ing), "ing:", ing, "count:", counts.get(ing))
+    
+
+    # assert(calculateInformationGain(testInfoGain, "eggs") == 0.9709505944546685), calculateInformationGain(testInfoGain, "eggs")
+    assert(calculateInformationGain(testInfoGain2, "eggs") == calculateInformationGain(testInfoGain2, "olive oil"))
+    """
     # ---------------------------------------------- Info Gain Tests -----------------------------------------------------
-
-    # ---------------------------------------------- Decision Tree Tests -----------------------------------------------------
-    with open('trainSmall.json') as f:
-        train = json.load(f)
-
-    """
-    filter = 5
-    decisionTree.filterIngredients(train, filter)
-    ingredientCounts = decisionTree.getIngredientCounts(train)
-    dick = dict()
-    for x in ingredientCounts:
-        if ingredientCounts.get(x) < filter:
-            dick[x] = ingredientCounts.get(x)
-
-    ingredientAmountsBiggerThanFilter = 0
-    for ingredient in ingredientCounts:
-        if ingredientCounts.get(ingredient) < filter:
-            ingredientAmountsBiggerThanFilter += 1
-
-    print("# of unique ingredients with amounts more than or equal to", filter, ":", ingredientAmountsBiggerThanFilter)
-    """
-
-    """
-    decisionTree.calculateInformationGainV2(train, "soy sauce")
-
-    recipesWithIngredient = []
-    recipesWithoutIngredient = []
-    for recipe in train:
-        if "soy sauce" in recipe.get("ingredients"):
-            recipesWithIngredient.append(recipe)
-        else:
-            recipesWithoutIngredient.append(recipe)
-
-    decisionTree.calculateInformationGainV2(recipesWithIngredient, "sesame oil")
-    decisionTree.calculateInformationGainV2(recipesWithoutIngredient, "jalapeno chilies")
-    """
-    decisionTree.filterIngredients(train, 10)
-    decisionTree.putIngredientsInSets(train)
-    root = decisionTree.decisionTreeNode()
-
-    # convert to numpy arrays instead of python lists maybe?
-    starttime = timeit.default_timer()
-    print("The start time is :", starttime)
-    root.makeDecisionTree(train)
-    print("The time difference is :", timeit.default_timer() - starttime)
-
-    with open('testSmall.json') as f:
-        test = json.load(f)
-
-    total = 0
-    correct = 0
-    for recipe in test:
-        total += 1
-        result = root.test_point(recipe)
-        if result == recipe['cuisine']:
-            correct += 1
-
-    print("Percentage correct = " + str((correct/total) * 100) + "%")
-
-    # ---------------------------------------------- Decision Tree Tests -----------------------------------------------------
     
     # ---------------------------------------------- Decision Tree Train Tests -----------------------------------------------------
     """

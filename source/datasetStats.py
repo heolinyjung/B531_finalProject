@@ -1,5 +1,3 @@
-# reference: https://linuxconfig.org/how-to-parse-data-from-json-into-python
-#            https://www.w3schools.com/python/python_json.asp
 import json
 
 # could probably put this all in functions and would be better but am lazy
@@ -10,9 +8,9 @@ if __name__ == '__main__':
     # id is assigned to the recipe id (int)
     # cuisine is assigned to the cuisine type (string)
     # ingredients is assigned to the list of ingredients (list of strings)
-    with open('train.json') as f:
+    with open('source/train.json') as f:
         train = json.load(f)
-    with open('test.json') as f2:
+    with open('source/test.json') as f2:
         test = json.load(f2)
 
     # dicts of ingredients and cuisine counts, ingredient/cuisine (string) assigned to ingredient/cuisine count (int)
