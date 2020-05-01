@@ -54,6 +54,7 @@ def getCuisineAmounts(recipes):
             cuisineCounts[cuisine] = 1
     return cuisineCounts
 
+# returns a set of all the ingredients in recipes (no duplicates)
 # O(ingredients)
 def getUniqueIngredients(recipes):
     ingredientsSoFar = set()
