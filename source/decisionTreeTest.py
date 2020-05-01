@@ -25,11 +25,11 @@ if __name__ == '__main__':
     print("The time difference is :", timeit.default_timer() - starttime)
     
     starttime = timeit.default_timer()
-    root3.makeDecisionTree2(train)
+    root2.makeDecisionTree2(train)
     print("The time difference is :", timeit.default_timer() - starttime)
 
     starttime = timeit.default_timer()
-    root2.makeDecisionTreeWithEntropy(train)
+    root3.makeDecisionTreeWithEntropy(train)
     print("The time difference is :", timeit.default_timer() - starttime)
     
     with open('source/testMedium.json') as f:
@@ -48,7 +48,7 @@ if __name__ == '__main__':
     correct = 0
     for recipe in test:
         total += 1
-        result = root3.test_point(recipe)
+        result = root2.test_point(recipe)
         if result == recipe['cuisine']:
             correct += 1
     print("Percentage correct = " + str((correct/total) * 100) + "%")
@@ -57,7 +57,7 @@ if __name__ == '__main__':
     correct = 0
     for recipe in test:
         total += 1
-        result = root2.test_point(recipe)
+        result = root3.test_point(recipe)
         if result == recipe['cuisine']:
             correct += 1
     print("Percentage correct = " + str((correct/total) * 100) + "%")
