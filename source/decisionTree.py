@@ -226,20 +226,36 @@ def calculateInformationGain(recipes, ingredient, cuisineAmounts=None, recipeLis
 
     # if this has been precomputed then use it, if not do it yourself lazy
     # makes two lists, one with all the recipes that the the ingredient param and one with all the recipes that dont
+    # also get the cuisine counts while going through recipes to save some time
     if recipeListsWithAndWithout == None:
         recipesWithIngredient = []
         recipesWithoutIngredient = []
+        cuisineCountsOfRecipesWith = dict()
+        cuisineCountsOfRecipesWithout = dict()
         for recipe in recipes:
+            cuisine = recipe.get("cuisine")
             if ingredient in recipe.get("ingredients"):
                 recipesWithIngredient.append(recipe)
+
+                if cuisine in cuisineCountsOfRecipesWith:
+                    cuisineCountsOfRecipesWith[cuisine] += 1
+                else:
+                    cuisineCountsOfRecipesWith[cuisine] = 1
             else:
                 recipesWithoutIngredient.append(recipe)
+
+                if cuisine in cuisineCountsOfRecipesWithout:
+                     cuisineCountsOfRecipesWithout[cuisine] += 1
+                else:
+                    cuisineCountsOfRecipesWithout[cuisine] = 1
     else:
         recipesWithIngredient = recipeListsWithAndWithout[0]
         recipesWithoutIngredient = recipeListsWithAndWithout[1]
+        cuisineCountsOfRecipesWith = None
+        cuisineCountsOfRecipesWithout = None
 
     # the entropys of the two sets after the ingredient split times their size ratios
-    weightedEntropyAfterSplit = ((len(recipesWithIngredient) / totalRecipes) * calculateEntropy(recipesWithIngredient)) + ((len(recipesWithoutIngredient) / totalRecipes) * calculateEntropy(recipesWithoutIngredient))
+    weightedEntropyAfterSplit = ((len(recipesWithIngredient) / totalRecipes) * calculateEntropy(recipesWithIngredient, cuisineCountsOfRecipesWith)) + ((len(recipesWithoutIngredient) / totalRecipes) * calculateEntropy(recipesWithoutIngredient, cuisineCountsOfRecipesWithout))
 
     return calculateEntropy(recipes, cuisineCounts) - weightedEntropyAfterSplit
 
@@ -412,55 +428,4 @@ class decisionTreeNode:
                 # recures and on the ingredients that have the split ingredient and don't and then returns itself
                 self.trueBranch = decisionTreeNode.makeDecisionTree2(decisionTreeNode(), recipesWithIngredient)
                 self.falseBranch = decisionTreeNode.makeDecisionTree2(decisionTreeNode(), recipesWithoutIngredient)
-                return self
-
-    # makes a decision tree but with entropy, much faster than with info gain but less accurate
-    def makeDecisionTreeWithEntropy(self, recipes):
-        ingredientsWithRecipeLists = getUniqueIngredients(recipes)
-        cuisineCounts = getCuisineAmounts(recipes)
-
-        # if only one type of cuisine left then make a leaf node with that classification
-        if len(cuisineCounts) == 1:
-            onlyCuisine = list(cuisineCounts.keys())[0]
-            return decisionTreeNode(cuisineClassification = onlyCuisine)
-        else:
-            # tuple that keeps track of the ingredient with lowest entropy so far, (ingredient name, ingredient entropy)
-            bestEntropyIngredient = ("wazowski", 9999)
-            # gets the ingredient with the best entropy
-            for ingredient in ingredientsWithRecipeLists:
-                entropy = calculateEntropy(recipes, cuisineCounts)
-                if entropy < bestEntropyIngredient[1]:
-                    bestEntropyIngredient = (ingredient, entropy)
-
-            # sets this node's split to the ingredient with the lowest entropy
-            self.ingredientSplit = bestEntropyIngredient[0]
-
-            # divides recipes based on if they have the ingredient being split at this Node
-            recipesWithIngredient = []
-            recipesWithoutIngredient = []
-            for recipe in recipes:
-                if self.ingredientSplit in recipe.get("ingredients"):
-                    recipesWithIngredient.append(recipe)
-                else:
-                    recipesWithoutIngredient.append(recipe)
-            
-            # this case excutes if no recipes are being split, all either have the ingredient or dont
-            # this means all ingredients left are resulting in no info gain
-            # so makes a leaf node with the classification of the cuisine that most of recipe have
-            if len(recipesWithIngredient) == 0 or len(recipesWithoutIngredient) == 0:
-                if len(recipesWithIngredient) == 0:
-                    cuisineAmounts = getCuisineAmounts(recipesWithoutIngredient)
-                else:
-                    cuisineAmounts = getCuisineAmounts(recipesWithIngredient)
-
-                # gets the cuisine that is majority and sets that as this node's classification
-                majorityCuisine = ("wazowski", -1)
-                for cuisine in cuisineAmounts:
-                    if cuisineAmounts.get(cuisine) > majorityCuisine[1]:
-                        majorityCuisine = (cuisine, cuisineAmounts.get(cuisine))
-                return decisionTreeNode(cuisineClassification = majorityCuisine[0], ingredientSplit=None)
-            else:
-                # recures and on the ingredients that have the split ingredient and don't and then returns itself
-                self.trueBranch = decisionTreeNode.makeDecisionTreeWithEntropy(decisionTreeNode(), recipesWithIngredient)
-                self.falseBranch = decisionTreeNode.makeDecisionTreeWithEntropy(decisionTreeNode(), recipesWithoutIngredient)
                 return self

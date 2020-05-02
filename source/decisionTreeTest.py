@@ -10,29 +10,36 @@ if __name__ == '__main__':
     with open('source/trainMedium.json') as f:
         train = json.load(f)
 
+    # need to use when doing full dataset or else will hit max recursion depth
+    # doesnt cause crash on my machine but may on yours, care
+    limit = 7
+    sys.setrecursionlimit(10**limit)
+
     # can mess with the filter, the higher it is the quicker the trees are to make
     # when lower doesn't really impact accuracy
-    filterIngredients(train, 10)
+    filterIngredients(train, 5)
     # put all the ingredent lists in sets, speeds everything alot
     putIngredientsInSets(train)
 
     root1 = decisionTreeNode()
-    root2 = decisionTreeNode()
+    # root2 = decisionTreeNode()
     root3 = decisionTreeNode()
-    
+
     starttime = timeit.default_timer()
     root1.makeDecisionTree(train)
     print("The time difference is :", timeit.default_timer() - starttime)
-    
+
+    starttime = timeit.default_timer()
+    root3.makeDecisionTree2(train)
+    print("The time difference is :", timeit.default_timer() - starttime)
+
+    """
     starttime = timeit.default_timer()
     root2.makeDecisionTree2(train)
     print("The time difference is :", timeit.default_timer() - starttime)
-
-    starttime = timeit.default_timer()
-    root3.makeDecisionTreeWithEntropy(train)
-    print("The time difference is :", timeit.default_timer() - starttime)
+    """
     
-    with open('source/testMedium.json') as f:
+    with open('source/testLarge.json') as f:
         test = json.load(f)
     
     total = 0
@@ -43,7 +50,7 @@ if __name__ == '__main__':
         if result == recipe['cuisine']:
             correct += 1
     print("Percentage correct = " + str((correct/total) * 100) + "%")
-
+    """
     total = 0
     correct = 0
     for recipe in test:
@@ -52,7 +59,7 @@ if __name__ == '__main__':
         if result == recipe['cuisine']:
             correct += 1
     print("Percentage correct = " + str((correct/total) * 100) + "%")
-
+    """
     total = 0
     correct = 0
     for recipe in test:
@@ -61,14 +68,7 @@ if __name__ == '__main__':
         if result == recipe['cuisine']:
             correct += 1
     print("Percentage correct = " + str((correct/total) * 100) + "%")
-
-    """
-    # need to use when doing full dataset or else will hit max recusion depth
-    # doesnt cause crash on my machine but may on yours, care
-    limit = 8
-    sys.setrecursionlimit(10**limit)
-    print(limit)
-    """
+    
 
     """
     decisionTree.calculateInformationGainV2(train, "soy sauce")
