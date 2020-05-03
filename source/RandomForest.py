@@ -43,6 +43,7 @@ class RandomForest:
     def create_forest(self):
         for i in range(self.tree_count):
             new_tree = decisionTreeNode()
+            new_tree.inForest = True
             new_tree.makeDecisionTree(self.bags[i])
             self.forest.append(new_tree)
 

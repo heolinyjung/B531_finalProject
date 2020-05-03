@@ -342,6 +342,7 @@ class decisionTreeNode:
     # ingredientSplit (string) is the ingredient being split at the Node
     # cuisineClassification (string) is the classification for the recipe reaches this Node, None for all non-leaf nodes
     def __init__(self, trueBranch = None, falseBranch = None, ingredientSplit = None, cuisineClassification = None):
+        self.inForest = False
         self.trueBranch = trueBranch
         self.falseBranch = falseBranch
         self.ingredientSplit = ingredientSplit
@@ -368,8 +369,9 @@ class decisionTreeNode:
         cuisineCounts = getCuisineAmounts(recipes)
         uniqueIngredients = getUniqueIngredients(recipes)
 
-        # introduce feature randomness
-        uniqueIngredients = cuisineCountsWithFeatureRandomness(uniqueIngredients)
+        # introduce feature randomness if this is a forest decision tree
+        if self.inForest:
+            uniqueIngredients = cuisineCountsWithFeatureRandomness(uniqueIngredients)
 
         # if only one type of cuisine left then make a leaf node with that classification
         if len(cuisineCounts) == 1:
@@ -425,6 +427,9 @@ class decisionTreeNode:
         tmp = getIngredientsWithRecipesAndCuisineAmounts(recipes)
         ingredientsWithRecipeLists = tmp[0]
         cuisineCounts = tmp[1]
+
+        if self.inForest:
+            ingredientsWithRecipeLists = cuisineCountsWithFeatureRandomness(ingredientsWithRecipeLists)
 
         # if only one type of cuisine left then make a leaf node with that classification
         if len(cuisineCounts) == 1:
