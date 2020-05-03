@@ -7,37 +7,30 @@ import sys
 
 if __name__ == '__main__':
     # ---------------------------------------------- Decision Tree Tests -----------------------------------------------------
-    with open('source/trainMedium.json') as f:
+    with open('source/trainLarge.json') as f:
         train = json.load(f)
 
     # need to use when doing full dataset or else will hit max recursion depth
     # doesnt cause crash on my machine but may on yours, care
-    limit = 7
+    limit = 5
     sys.setrecursionlimit(10**limit)
 
-    # can mess with the filter, the higher it is the quicker the trees are to make
-    # when lower doesn't really impact accuracy
-    filterIngredients(train, 5)
-    # put all the ingredent lists in sets, speeds everything alot
+    # can mess with the filter, is the percentage of the lowest occuring ingredients that will be removed
+    # seems to be at about 75% we start to lose accuracy with medium set
+    # 80 seems to be the cutoff for the large dataset but can go to 90 and only lose about a percent
+    filter = 90
+    filterIngredients(train, filter)
+    print(filter)
+    # removes the recipes with now empty ingredient lists bc they don't help but may negativly effect acc
+    train = removeEmptyRecipes(train)
+    # put all the ingredent lists in sets, speeds up everything alot
     putIngredientsInSets(train)
 
     root1 = decisionTreeNode()
-    # root2 = decisionTreeNode()
-    root3 = decisionTreeNode()
 
     starttime = timeit.default_timer()
     root1.makeDecisionTree(train)
     print("The time difference is :", timeit.default_timer() - starttime)
-
-    starttime = timeit.default_timer()
-    root3.makeDecisionTree2(train)
-    print("The time difference is :", timeit.default_timer() - starttime)
-
-    """
-    starttime = timeit.default_timer()
-    root2.makeDecisionTree2(train)
-    print("The time difference is :", timeit.default_timer() - starttime)
-    """
     
     with open('source/testLarge.json') as f:
         test = json.load(f)
@@ -50,58 +43,6 @@ if __name__ == '__main__':
         if result == recipe['cuisine']:
             correct += 1
     print("Percentage correct = " + str((correct/total) * 100) + "%")
-    """
-    total = 0
-    correct = 0
-    for recipe in test:
-        total += 1
-        result = root2.test_point(recipe)
-        if result == recipe['cuisine']:
-            correct += 1
-    print("Percentage correct = " + str((correct/total) * 100) + "%")
-    """
-    total = 0
-    correct = 0
-    for recipe in test:
-        total += 1
-        result = root3.test_point(recipe)
-        if result == recipe['cuisine']:
-            correct += 1
-    print("Percentage correct = " + str((correct/total) * 100) + "%")
-    
-
-    """
-    decisionTree.calculateInformationGainV2(train, "soy sauce")
-
-    recipesWithIngredient = []
-    recipesWithoutIngredient = []
-    for recipe in train:
-        if "soy sauce" in recipe.get("ingredients"):
-            recipesWithIngredient.append(recipe)
-        else:
-            recipesWithoutIngredient.append(recipe)
-
-    decisionTree.calculateInformationGainV2(recipesWithIngredient, "sesame oil")
-    decisionTree.calculateInformationGainV2(recipesWithoutIngredient, "jalapeno chilies")
-    """
-
-    """
-    # filter function testing
-    filter = 5
-    decisionTree.filterIngredients(train, filter)
-    ingredientCounts = decisionTree.getIngredientCounts(train)
-    dick = dict()
-    for x in ingredientCounts:
-        if ingredientCounts.get(x) < filter:
-            dick[x] = ingredientCounts.get(x)
-
-    ingredientAmountsBiggerThanFilter = 0
-    for ingredient in ingredientCounts:
-        if ingredientCounts.get(ingredient) < filter:
-            ingredientAmountsBiggerThanFilter += 1
-
-    print("# of unique ingredients with amounts more than or equal to", filter, ":", ingredientAmountsBiggerThanFilter)
-    """
     # ---------------------------------------------- Decision Tree Tests -----------------------------------------------------
     """
     # ---------------------------------------------- Entropy Tests -----------------------------------------------------

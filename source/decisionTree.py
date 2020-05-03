@@ -26,19 +26,51 @@ def putIngredientsInSets(recipes):
 
     return recipes
 
-# removes all ingredients in the recipes don't occur more than or equal to the filter
-# STILL A BUG IN THIS, WORKS MOSTLY BUT SMALL AMOUNT OF INGREDIENTS GETTING PAST SOMEHOW
-# O(2 * ingredients)
-def filterIngredients(recipes, filter):
-    ingredientCounts = getIngredientCounts(recipes)
+# removes a percentage of ingredients based on how many times they occur in the recipes
+# i.e. the if the param bottomPercentToRemove is 10 then will remove ten percent of the ingredients with the lowest number
+# of occurences, same for param topPercentToRemove but will remove the ingredients with the most occurences
+# source for sorting a dictionary - https://stackoverflow.com/questions/613183/how-do-i-sort-a-dictionary-by-value
+def filterIngredients(recipes, bottomPercentToRemove=-1, topPercentToRemove=-1):
+    if topPercentToRemove == -1 and bottomPercentToRemove == -1:
+        return recipes
+    # idiot proofing, aka making sure i don't break anything when i eventually do something stupid
+    elif bottomPercentToRemove >= 100 or topPercentToRemove >= 100 or bottomPercentToRemove + topPercentToRemove >= 100:
+        return list()
+    else:
+        sortedIngredients = sorted(getIngredientCounts(recipes).items(), key=lambda x: x[1])
+        setOfIngreToRemove = set() 
 
+        if bottomPercentToRemove > 0:
+            numOfBottomIngreToRemove = int(len(sortedIngredients) * (bottomPercentToRemove / 100))
+            for i in range(numOfBottomIngreToRemove):
+                setOfIngreToRemove.add((sortedIngredients[i])[0])
+        
+        if topPercentToRemove > 0:
+            numOfTopIngreToRemove = int(len(sortedIngredients) * (topPercentToRemove / 100))
+            sortedIngredientsLength = len(sortedIngredients) - 1
+            for i in range(numOfTopIngreToRemove):
+                setOfIngreToRemove.add((sortedIngredients[sortedIngredientsLength - i])[0])
+
+        for recipe in recipes:
+            newIngredientList = list()
+            ingredientList = recipe.get("ingredients")
+            for ingredient in ingredientList:
+                if ingredient not in setOfIngreToRemove:
+                    newIngredientList.append(ingredient)
+
+            recipe["ingredients"] = newIngredientList
+
+        return recipes
+
+# removes all the recipes that have no ingredients, usually used after filtering ingredients
+def removeEmptyRecipes(recipes):
+    newRecipes = list()
     for recipe in recipes:
         ingredientList = recipe.get("ingredients")
-        for ingredient in ingredientList:
-            if ingredientCounts.get(ingredient) < filter:
-                ingredientList.remove(ingredient)
+        if len(ingredientList) > 0:
+            newRecipes.append(recipe)
 
-    return recipes
+    return newRecipes
 
 # returns a dictionary of cuisine types (strings) mapped to
 # the number of times the cuisine appears in the recipes parameter (int)
@@ -189,6 +221,18 @@ def getIngredientsWithRecipesAndCuisineAmounts(recipes):
 # introduces feature randomness by giving the tree a random set of len(cuisines)/2 choices (unique) from the original
 # maybe try changing or randomizing the number of choices rather than just 1/2 the amount of choices
 def cuisineCountsWithFeatureRandomness(cuisineOccurenceForAllIngredients):
+    if len(cuisineOccurenceForAllIngredients) <= 1:
+        return cuisineOccurenceForAllIngredients
+    else:
+        randomFeatures = random.sample(list(cuisineOccurenceForAllIngredients), int(len(cuisineOccurenceForAllIngredients) / 2))
+        newSet = set()
+        for i in randomFeatures:
+            newSet.add(i)
+        return newSet
+
+# introduces feature randomness by giving the tree a random set of len(cuisines)/2 choices (unique) from the original
+# maybe try changing or randomizing the number of choices rather than just 1/2 the amount of choices
+def cuisineCountsWithFeatureRandomness2(cuisineOccurenceForAllIngredients):
     if len(cuisineOccurenceForAllIngredients.keys()) <= 1:
         return cuisineOccurenceForAllIngredients
     else:
@@ -323,7 +367,7 @@ class decisionTreeNode:
         cuisineCounts = getCuisineAmounts(recipes)
         uniqueIngredients = getUniqueIngredients(recipes)
         # introduce feature randomness
-        # uniqueIngredients = cuisineCountsWithFeatureRandomness(uniqueIngredients)
+        uniqueIngredients = cuisineCountsWithFeatureRandomness(uniqueIngredients)
 
         # if only one type of cuisine left then make a leaf node with that classification
         if len(cuisineCounts) == 1:
