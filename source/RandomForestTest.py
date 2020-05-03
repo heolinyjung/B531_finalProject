@@ -7,9 +7,9 @@ import sys
 
 if __name__ == "__main__":
 
-    with open("source/trainLarge.json") as f:
+    with open("trainLarge.json") as f:
         train = json.load(f)
-    with open("source/testLarge.json") as y:
+    with open("testLarge.json") as y:
         test = json.load(y)
 
     # need to use when doing full dataset or else will hit max recursion depth
@@ -29,7 +29,9 @@ if __name__ == "__main__":
     putIngredientsInSets(train)
 
     starttime = timeit.default_timer()
-    testForest = RandomForest(10, train)
+    # change number 10 to other numbers to increase or decrease the size of the forest
+    forestSize = 10
+    testForest = RandomForest(forestSize, train)
     print("The time difference is :", timeit.default_timer() - starttime)
 
     total = 0

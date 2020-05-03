@@ -30,6 +30,7 @@ class RandomForest:
 
     # Takes in a list (dataset) and returns a number of "bags" of values from that list of the same size but of random
     # selection w/ replacement. The number of bags is determined by the tree_count.
+    # time complexity = O(dataset*tree_count)
     def bag_data(self, dataset):
         if dataset is None:
             return False
@@ -38,6 +39,7 @@ class RandomForest:
         return True
 
     # Creates the forest using bagged data and feature randomness
+    # O(tree_count*makeDecisionTree)
     def create_forest(self):
         for i in range(self.tree_count):
             new_tree = decisionTreeNode()
@@ -45,6 +47,7 @@ class RandomForest:
             self.forest.append(new_tree)
 
     # Tests a recipe by running the test algorithm for each tree and returning the classification with the highest count
+    # O(tree_count*O(test_point))
     def test_point(self, recipe):
         results = {}
         maxCuisine = ['', 0]

@@ -348,6 +348,7 @@ class decisionTreeNode:
         self.cuisineClassification = cuisineClassification
 
     # classifies a recipe using a the self param decision tree and return the classification (string)
+    # O(tree depth)
     def test_point(self, recipe):
         if self.cuisineClassification is not None:
             return self.cuisineClassification
@@ -366,6 +367,7 @@ class decisionTreeNode:
     def makeDecisionTree(self, recipes):
         cuisineCounts = getCuisineAmounts(recipes)
         uniqueIngredients = getUniqueIngredients(recipes)
+
         # introduce feature randomness
         uniqueIngredients = cuisineCountsWithFeatureRandomness(uniqueIngredients)
 
