@@ -95,22 +95,37 @@ if __name__ == '__main__':
     testLarge = 'testLarge.json'
 
     print("\n---- Welcome to the Recipe Classifier ----\nBy: Mary Ann Hazuga, Heoliny Jung, Joe Soellner\n")
-    isForest = input("Would you like to test a single decision tree or a random forest?\n(tree = 'T', forest = 'F')\n")
-    if isForest == 'F':
-        forest_size = int(input("Please enter the size of your forest:\n"))
-    selection = input("Please select a dataset size:\nSmall: 'S'\nMedium: 'M'\nLarge: 'L'\n")
-    if selection == 'S':
+    cont = False
+    while not cont:
+        isForest = input("Would you like to test a single decision tree or a random forest?\n(tree = 'T', forest = 'F')\n")
         if isForest == 'F':
-            forestTest(trainSmall, testSmall, forest_size)
+            forest_size = int(input("Please enter the size of your forest:\n"))
+            cont = True
+        elif isForest == 'T':
+            cont = True
         else:
-            dTreeTest(trainSmall, testSmall)
-    if selection == 'M':
-        if isForest == 'F':
-            forestTest(trainMedium, testMedium, forest_size)
+            print("**Not a valid input, try again**")
+
+    cont = False
+    while not cont:
+        selection = input("Please select a dataset size:\nSmall: 'S'\nMedium: 'M'\nLarge: 'L'\n")
+        if selection == 'S':
+            cont = True
+            if isForest == 'F':
+                forestTest(trainSmall, testSmall, forest_size)
+            else:
+                dTreeTest(trainSmall, testSmall)
+        elif selection == 'M':
+            cont = True
+            if isForest == 'F':
+                forestTest(trainMedium, testMedium, forest_size)
+            else:
+                dTreeTest(trainMedium, testMedium)
+        elif selection == 'L':
+            cont = True
+            if isForest == 'F':
+                forestTest(trainLarge, testLarge, forest_size)
+            else:
+                dTreeTest(trainLarge, testLarge)
         else:
-            dTreeTest(trainMedium, testMedium)
-    if selection == 'L':
-        if isForest == 'F':
-            forestTest(trainLarge, testLarge, forest_size)
-        else:
-            dTreeTest(trainLarge, testLarge)
+            print("**Not a valid input, try again**")
