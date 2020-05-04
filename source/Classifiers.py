@@ -38,7 +38,7 @@ def makeData(train):
     #Get features to use for classification
     features = []
     for ingredient, amount in ingredientCounts.items():
-        if amount > 600:
+        if amount > 500 and amount < 10000:
             features.append(ingredient)
 
 
@@ -95,13 +95,6 @@ with open('test.json') as f2:
 
 X, y = makeData(train)
 
-shortX = X[0:10000]
-shorty = y[0:10000]
-
-NearestNeighbor(shortX, shorty)
-
-'''
+SVM(X, y)
+NearestNeighbor(X, y)
 MLP(X, y)
-
-SVM(shortX, shorty)
-'''
