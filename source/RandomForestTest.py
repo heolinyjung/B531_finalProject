@@ -7,9 +7,9 @@ import sys
 
 if __name__ == "__main__":
 
-    with open("trainLarge.json") as f:
+    with open("trainMedium.json") as f:
         train = json.load(f)
-    with open("testLarge.json") as y:
+    with open("testMedium.json") as y:
         test = json.load(y)
 
     # need to use when doing full dataset or else will hit max recursion depth

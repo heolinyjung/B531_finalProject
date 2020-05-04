@@ -16,6 +16,8 @@ example structure of each dictionary in the list:
 }
 """
 
+featureRandomnessFactor = .8
+
 # puts all the ingredients lists in sets instead of lists
 # MAJOR KEY, REDUCES TIMES BY ALOT BC CONSTANT CHECKS IF SOMETHING IN A SET
 # O(ingredients)
@@ -224,7 +226,7 @@ def cuisineCountsWithFeatureRandomness(cuisineOccurenceForAllIngredients):
     if len(cuisineOccurenceForAllIngredients) <= 1:
         return cuisineOccurenceForAllIngredients
     else:
-        randomFeatures = random.sample(list(cuisineOccurenceForAllIngredients), int(len(cuisineOccurenceForAllIngredients) / 2))
+        randomFeatures = random.sample(list(cuisineOccurenceForAllIngredients), int(featureRandomnessFactor * len(cuisineOccurenceForAllIngredients)))
         newSet = set()
         for i in randomFeatures:
             newSet.add(i)
@@ -236,7 +238,7 @@ def cuisineCountsWithFeatureRandomness2(cuisineOccurenceForAllIngredients):
     if len(cuisineOccurenceForAllIngredients.keys()) <= 1:
         return cuisineOccurenceForAllIngredients
     else:
-        randomFeatures = random.sample(list(cuisineOccurenceForAllIngredients.keys()), int(len(cuisineOccurenceForAllIngredients.keys()) / 2))
+        randomFeatures = random.sample(list(cuisineOccurenceForAllIngredients.keys()), int(featureRandomnessFactor * len(cuisineOccurenceForAllIngredients)))
         newDict = {}
         for i in randomFeatures:
             newDict[i] = cuisineOccurenceForAllIngredients[i]
@@ -376,7 +378,7 @@ class decisionTreeNode:
         # if only one type of cuisine left then make a leaf node with that classification
         if len(cuisineCounts) == 1:
             onlyCuisine = list(cuisineCounts.keys())[0]
-            return decisionTreeNode(cuisineClassification = onlyCuisine)
+            return decisionTreeNode(cuisineClassification=onlyCuisine)
         else:
             # tuple that keeps track of the ingredient with highest info gain so far
             # (ingredient name, ingredient info gain)
