@@ -16,7 +16,12 @@ example structure of each dictionary in the list:
 }
 """
 
-featureRandomnessFactor = .5
+featureRandomnessFactor = .7
+# .7 @ 800/200, 10 trees, 20 trials = 37.15% acc, avg dur = 11.44 (control = 32.1% acc, 1.51)
+# .5 @ 800/200, 10 trees, 20 trials = 37.75% acc, avg dur = 11.99 (control = 32.0% acc, 1.55)
+# .3 @ 800/200, 10 trees, 20 trials = 37.175% acc, avg dur = 11.66 (control = 33.225% acc, 1.57)
+# additional tests excluded
+# conclusion: featureRandomnessFactor does not have a huge amount of impact to the algorithm, .5 is a valid choice
 
 # puts all the ingredients lists in sets instead of lists
 # MAJOR KEY, REDUCES TIMES BY ALOT BC CONSTANT CHECKS IF SOMETHING IN A SET

@@ -127,6 +127,7 @@ def findAverages(data, forestSize, trials, train_size, test_size):
     minForestPer = 100.0
 
     for i in range(trials):
+        print("-------------Trial "+str(i)+"-------------")
         train, test = foldData(data, train_size, test_size)
 
         # results = testWithoutFilter(train, test)
@@ -176,7 +177,7 @@ if __name__ == '__main__':
     # ------averages over multiple different datasets------
 
     # desired forest size
-    forestSize = 10
+    forestSize = 15
     # desired number of trials
     trials = 10
 
@@ -186,7 +187,8 @@ if __name__ == '__main__':
     # the random forest stays within +-2% with or without filter, meanwhile their execution times are affected
     # in similar ways
 
-    # random forest outcomes are much too unpredictable at anything less than
+    # random forest outcomes are much too unpredictable at anything less than size 10. Deviations are almost always
+    # higher than their decision tree counterparts
 
     '''
     # change these to the right strings for your system
