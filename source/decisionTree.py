@@ -16,11 +16,15 @@ example structure of each dictionary in the list:
 }
 """
 
-featureRandomnessFactor = .7
+featureRandomnessFactor = .5
+# using filtered data
 # .7 @ 800/200, 10 trees, 20 trials = 37.15% acc, avg dur = 11.44 (control = 32.1% acc, 1.51)
 # .5 @ 800/200, 10 trees, 20 trials = 37.75% acc, avg dur = 11.99 (control = 32.0% acc, 1.55)
 # .3 @ 800/200, 10 trees, 20 trials = 37.175% acc, avg dur = 11.66 (control = 33.225% acc, 1.57)
-# additional tests excluded
+# .7 @ 800/200, 15 trees, 10 trials = 38.5% acc, avg dur = 18.37 (control = 32.0% acc, 1.55)
+# .5 @ 800/200, 15 trees, 10 trials = 38.4% acc, avg dur = 16.63, dev = 10 (control = 32.4% acc, 1.46, 10)
+# .3 @ 800/200, 15 trees, 10 trials = 39.1% acc, avg dur = 18.26, dev = 12.5 (control = 32.0% acc, 1.55, 16)
+# ^^^ VERY INCONSISTENT ^^^, but shows from 10-15 trees, about +7 sec.
 # conclusion: featureRandomnessFactor does not have a huge amount of impact to the algorithm, .5 is a valid choice
 
 # puts all the ingredients lists in sets instead of lists

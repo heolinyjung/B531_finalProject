@@ -127,7 +127,7 @@ def findAverages(data, forestSize, trials, train_size, test_size):
     minForestPer = 100.0
 
     for i in range(trials):
-        print("-------------Trial "+str(i)+"-------------")
+        print("-------------Trial "+str(i+1)+"-------------")
         train, test = foldData(data, train_size, test_size)
 
         # results = testWithoutFilter(train, test)
@@ -160,35 +160,57 @@ def findAverages(data, forestSize, trials, train_size, test_size):
 
 if __name__ == '__main__':
 
-    # desired training dataset size
-    train_size = 800
-    # desired testing dataset size
-    test_size = 200
-
     with open('train.json') as f:
         data = json.load(f)
+
+    # desired forest size
+    forestSize = 3
+
+    # ------full test------
+
+    train_size = len(data) - int(len(data)/5)
+    test_size = int(len(data)/5) - 1
+    train, test = foldData(data, train_size, test_size)
+    testWithFilter(train, test, forestSize)
+
+    # ---------------------
+
+    # desired train size
+    train_size = 3600
+    # desired test size
+    test_size = 800
 
     # ------same data, with or without filter------
 
     # train, test = foldData(data, train_size, test_size)
-    # testWithoutFilter(train, test)
-    # testWithFilter(train, test)
+    # testWithoutFilter(train, test, forestSize)
+    # testWithFilter(train, test, forestSize)
 
     # ------averages over multiple different datasets------
 
-    # desired forest size
-    forestSize = 15
     # desired number of trials
     trials = 10
 
-    findAverages(data, forestSize, trials, train_size, test_size)
+    # findAverages(data, forestSize, trials, train_size, test_size)
 
     # Seems to me like the filter can hugely affect the single decision tree either in a good way or bad while
     # the random forest stays within +-2% with or without filter, meanwhile their execution times are affected
     # in similar ways
 
-    # random forest outcomes are much too unpredictable at anything less than size 10. Deviations are almost always
+    # random forest outcomes are much too unpredictable at anything less than size 10/15. Deviations are almost always
     # higher than their decision tree counterparts
+
+    # Set feature randomness factor to .5
+    # With filter, @ 800/200, 20 trees, 20 trials = 38.525% acc, avg dur = 20.05 (control = 32.075% acc, 1.29)
+    # With filter, @ 800/200, 30 trees, 20 trials = 39.975% acc, avg dur = 31.57 (control = 32.625% acc, 1.33)
+    # With filter, @ 1600/400, 20 trees, 10 trials = 45.1% acc, avg dur = 69.3, dev = 5.25 (control = 36.95% acc, 4.35)
+    # With filter, @ 1600/400, 30 trees, 10 trials = 42.65% acc, avg dur = 103.9, dev = 9.5 (control = 37.05% acc, 4.42)
+    # With filter, @ 1600/400, 50 trees, 10 trials = 44.75% acc, avg dur = 174.14, dev = 6.5 (control = 37.125% acc, 4.44)
+    # ^^ Only difference between number of trees is deviation (maybe) ^^
+    # With filter, @ 3200/800, 20 trees, 10 trials = 42.65% acc, avg dur = 103.9 (control = 37.05% acc, 4.42)
+
+
+
 
     '''
     # change these to the right strings for your system
