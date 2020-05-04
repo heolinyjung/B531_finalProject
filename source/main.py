@@ -1,11 +1,17 @@
-from source.decisionTree import *
-from source.RandomForest import *
+try:
+    from source.decisionTree import *
+    from source.RandomForest import *
+    from source.datasetStats import getStats
+except ModuleNotFoundError:
+    from decisionTree import *
+    from RandomForest import *
+    from datasetStats import getStats
 import json
 import timeit
 import numpy as np
 import sys
 import random
-from source.datasetStats import getStats
+
 
 
 def foldData(data, numTrain, numTest):
@@ -21,7 +27,6 @@ def foldData(data, numTrain, numTest):
 
 
 def dTreeTest(train, test):
-
     root1 = decisionTreeNode()
 
     starttime = timeit.default_timer()
@@ -165,8 +170,12 @@ if __name__ == '__main__':
     # desired testing dataset size
     test_size = 200
 
-    with open('train.json') as f:
-        data = json.load(f)
+    try:
+        with open('train.json') as f:
+            data = json.load(f)
+    except FileNotFoundError:
+        with open('source/train.json') as f:
+            data = json.load(f)
 
     # ------same data, with or without filter------
 
@@ -191,13 +200,8 @@ if __name__ == '__main__':
     # higher than their decision tree counterparts
 
     '''
+if __name__ == '__main__':
     # change these to the right strings for your system
-    trainSmall = 'trainSmall.json'
-    testSmall = 'testSmall.json'
-    trainMedium = 'trainMedium.json'
-    testMedium = 'testMedium.json'
-    trainLarge = 'trainLarge.json'
-    testLarge = 'testLarge.json'
 
     print("\n---- Welcome to the Recipe Classifier ----\nBy: Mary Ann Hazuga, Heoliny Jung, Joe Soellner\n")
     cont = False
@@ -205,10 +209,10 @@ if __name__ == '__main__':
     isForest = ''
     while not cont:
         isForest = input("Would you like to test a single decision tree or a random forest?\n(tree = 'T', forest = 'F')\n")
-        if isForest == 'F':
+        if isForest == 'F' or isForest == 'f':
             forest_size = int(input("Please enter the size of your forest:\n"))
             cont = True
-        elif isForest == 'T':
+        elif isForest == 'T' or isForest == 't':
             cont = True
         else:
             print("**Not a valid input, try again**")
@@ -218,22 +222,40 @@ if __name__ == '__main__':
         selection = input("Please select a dataset size:\nSmall: 'S'\nMedium: 'M'\nLarge: 'L'\n")
         if selection == 'S':
             cont = True
-            if isForest == 'F':
-                forestTest(trainSmall, testSmall, forest_size)
-            else:
-                dTreeTest(trainSmall, testSmall)
+            try:
+                if isForest == 'F':
+                    forestTest("trainSmall.json", "testSmall.json", forest_size)
+                else:
+                    dTreeTest("trainSmall.json", "testSmall.json")
+            except FileNotFoundError:
+                if isForest == 'F':
+                    forestTest("source/trainSmall.json", "source/testSmall.json", forest_size)
+                else:
+                    dTreeTest("source/trainSmall.json", "source/testSmall.json")
         elif selection == 'M':
             cont = True
-            if isForest == 'F':
-                forestTest(trainMedium, testMedium, forest_size)
-            else:
-                dTreeTest(trainMedium, testMedium)
+            try:
+                if isForest == 'F':
+                    forestTest("trainMedium.json", "testMedium.json", forest_size)
+                else:
+                    dTreeTest("trainMedium.json", "testMedium.json")
+            except FileNotFoundError:
+                if isForest == 'F':
+                    forestTest("source/trainMedium.json", "source/testMedium.json", forest_size)
+                else:
+                    dTreeTest("source/trainMedium.json", "source/testMedium.json")
         elif selection == 'L':
             cont = True
-            if isForest == 'F':
-                forestTest(trainLarge, testLarge, forest_size)
-            else:
-                dTreeTest(trainLarge, testLarge)
+            try:
+                if isForest == 'F':
+                    forestTest("trainLarge.json", "testLarge.json", forest_size)
+                else:
+                    dTreeTest("trainLarge.json", "testLarge.json")
+            except FileNotFoundError:
+                if isForest == 'F':
+                    forestTest("source/trainLarge.json", "source/testLarge.json", forest_size)
+                else:
+                    dTreeTest("source/trainLarge.json", "source/testLarge.json")
         else:
             print("**Not a valid input, try again**")
     '''

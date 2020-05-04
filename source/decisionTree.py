@@ -2,6 +2,7 @@ import math
 import json
 import numpy as np
 import random
+import re
 
 """
 recipes param is a list of dictionaries
@@ -237,18 +238,6 @@ def cuisineCountsWithFeatureRandomness(cuisineOccurenceForAllIngredients):
             newSet.add(i)
         return newSet
 
-# introduces feature randomness by giving the tree a random set of len(cuisines)/2 choices (unique) from the original
-# maybe try changing or randomizing the number of choices rather than just 1/2 the amount of choices
-def cuisineCountsWithFeatureRandomness2(cuisineOccurenceForAllIngredients):
-    if len(cuisineOccurenceForAllIngredients.keys()) <= 1:
-        return cuisineOccurenceForAllIngredients
-    else:
-        randomFeatures = random.sample(list(cuisineOccurenceForAllIngredients.keys()), int(featureRandomnessFactor * len(cuisineOccurenceForAllIngredients)))
-        newDict = {}
-        for i in randomFeatures:
-            newDict[i] = cuisineOccurenceForAllIngredients[i]
-        return newDict
-
 # calculates the entropy of a list of recipes according to the cuisine types
 # O(1) with cuisineCounts precomputed, O(recipes) without
 def calculateEntropy(recipes, cuisineAmounts=None):
@@ -310,39 +299,6 @@ def calculateInformationGain(recipes, ingredient, cuisineAmounts=None, recipeLis
 
     return calculateEntropy(recipes, cuisineCounts) - weightedEntropyAfterSplit
 
-# DOESNT WORK BUT IF IT DID WOULD BE MUCH FASTER THAN OTHER INFO GAIN
-# O(1) if have the precomputations else O(yikes)
-def calculateInformationGainBad(recipes, ingredient, cuisineAmounts=None, ingredientinCuisineAmounts=None):
-    totalRecipes = len(recipes)
-    ingredientEntropy = 0
-
-    # if this has been precomputed then use it, if not do it yourself lazy
-    if ingredientinCuisineAmounts == None:
-        ingredientinCuisineCounts = ingredientOccurencesPerCuisineType(recipes, ingredient)
-    else:
-        ingredientinCuisineCounts = ingredientinCuisineAmounts
-    if cuisineAmounts == None:
-        cuisineCounts = getCuisineAmounts(recipes)
-    else:
-        cuisineCounts = cuisineAmounts
-
-    for cuisine in cuisineCounts:
-        cuisineOccurences = cuisineCounts.get(cuisine)
-        ingredientOccurences = ingredientinCuisineCounts.get(cuisine)
-
-        if ingredientOccurences == None:
-            ingredientOccurences = 0
-        elif ingredientOccurences > cuisineOccurences:
-            ingredientOccurences = cuisineOccurences
-
-        if ingredientOccurences == 0 or cuisineOccurences - ingredientOccurences == 0:
-            cuisineEntropy = 0
-        else:
-            cuisineEntropy = (-(ingredientOccurences / cuisineOccurences) * math.log2(ingredientOccurences / cuisineOccurences)) - ((cuisineOccurences - ingredientOccurences) / cuisineOccurences) * math.log2((cuisineOccurences - ingredientOccurences) / cuisineOccurences)
-        ingredientEntropy += (cuisineOccurences / totalRecipes) * cuisineEntropy
-
-    return calculateEntropy(recipes, cuisineCounts) - ingredientEntropy
-
 class decisionTreeNode:
     # trueBranch (dTreeNode) the Node all recipes that DO have the ingredient in ingredientSplit will go to
     # falseBranch (dTreeNode) the Node all recipes that DON'T have the ingredient in ingredientSplit will go to
@@ -365,6 +321,38 @@ class decisionTreeNode:
                 return self.trueBranch.test_point(recipe)
             else:
                 return self.falseBranch.test_point(recipe)
+
+    # writes a tree to a text file with the given file name
+    def writeTreeToFile(self, fileName):
+        file = open("source/" + fileName + ".txt", "w")
+        file.write(self.treeToString())
+        file.close()
+
+    # turns a decision tree into a string
+    # root[leftBranch[leftleftBranch[_leftleftleftBranch,_rightrightleftBranch],_rightleftBranch],_rightBranch]
+    def treeToString(self):
+        if self.cuisineClassification is None:
+            return self.ingredientSplit + "[" + self.trueBranch.treeToString() + "," + self.falseBranch.treeToString() + "]"
+        else:
+            # marks that this a cuisine and not an ingredient
+            return "_" + self.cuisineClassification
+
+    # turns the given tree into the tree stored in the file with the given file name
+    def loadTreeFromFile(self, fileName):
+        file = open("source/" + fileName + ".txt", "r")
+        treeString = file.readline()
+        file.close()
+        # self.makeTreeFromString(treeString)
+
+    """
+    def makeTreeFromString(self, treeString):
+        if treeString[:1] == "_":
+            return treeString.partition("[")
+        else:
+            self.ingredientSplit = (re.match("(.*?)]", treeString).group())
+
+    """
+        
 
     """
     return the root of a decision tree built using recipes in the recipes param
@@ -425,65 +413,4 @@ class decisionTreeNode:
                 # recures and on the ingredients that have the split ingredient and don't and then returns itself
                 self.trueBranch = decisionTreeNode.makeDecisionTree(decisionTreeNode(), recipesWithIngredient)
                 self.falseBranch = decisionTreeNode.makeDecisionTree(decisionTreeNode(), recipesWithoutIngredient)
-                return self
-
-    # makes a decision tree but does precomputation so information gain is quicker but isn't really much faster than
-    # than makeDecisionTree
-    def makeDecisionTree2(self, recipes):
-        # cumon bro better name
-        tmp = getIngredientsWithRecipesAndCuisineAmounts(recipes)
-        ingredientsWithRecipeLists = tmp[0]
-        cuisineCounts = tmp[1]
-
-        if self.inForest:
-            ingredientsWithRecipeLists = cuisineCountsWithFeatureRandomness(ingredientsWithRecipeLists)
-
-        # if only one type of cuisine left then make a leaf node with that classification
-        if len(cuisineCounts) == 1:
-            onlyCuisine = list(cuisineCounts.keys())[0]
-            return decisionTreeNode(cuisineClassification = onlyCuisine)
-        else:
-            # tuple that keeps track of the ingredient with highest info gain so far
-            # (ingredient name, ingredient info gain)
-            bestInfoGainIngredient = ("wazowski", -1)
-            # gets the ingredient with the best info gain
-            for ingredient in ingredientsWithRecipeLists:
-                infoGain = calculateInformationGain(recipes, ingredient, cuisineCounts, ingredientsWithRecipeLists.get(ingredient))
-                if infoGain > bestInfoGainIngredient[1]:
-                    bestInfoGainIngredient = (ingredient, infoGain)
-            
-            # gets the tuple of lists of recipes that do and don't have the ingredient with the best info gain
-            recipeListsWithAndWithout = ingredientsWithRecipeLists.get(bestInfoGainIngredient[0])
-
-            # fixes issue where the only recipes left were ones with no ingredients
-            # only happens when too many ingredients are filtered from the dataset
-            if recipeListsWithAndWithout is None:
-                recipesWithIngredient = []
-                recipesWithoutIngredient = []
-            else:
-                recipesWithIngredient = recipeListsWithAndWithout[0]
-                recipesWithoutIngredient = recipeListsWithAndWithout[1]
-
-            # sets this node split to the ingredient with the best info gain
-            self.ingredientSplit = bestInfoGainIngredient[0]
-            
-            # case excutes if no recipes are being split, all either have the ingredient or dont
-            # this means all ingredients left are resulting in no info gain
-            # so makes a leaf node with the classification of the cuisine that most of recipe have
-            if len(recipesWithIngredient) == 0 or len(recipesWithoutIngredient) == 0:
-                if len(recipesWithIngredient) == 0:
-                    cuisineAmounts = getCuisineAmounts(recipesWithoutIngredient)
-                else:
-                    cuisineAmounts = getCuisineAmounts(recipesWithIngredient)
-                
-                # gets the cuisine that is majority and sets that as this node's classification
-                majorityCuisine = ("wazowski", -1)
-                for cuisine in cuisineAmounts:
-                    if cuisineAmounts.get(cuisine) > majorityCuisine[1]:
-                        majorityCuisine = (cuisine, cuisineAmounts.get(cuisine))
-                return decisionTreeNode(cuisineClassification = majorityCuisine[0], ingredientSplit=None)
-            else:
-                # recures and on the ingredients that have the split ingredient and don't and then returns itself
-                self.trueBranch = decisionTreeNode.makeDecisionTree2(decisionTreeNode(), recipesWithIngredient)
-                self.falseBranch = decisionTreeNode.makeDecisionTree2(decisionTreeNode(), recipesWithoutIngredient)
                 return self
