@@ -4,13 +4,14 @@ import decisionTree
 import json
 import timeit
 import sys
+import main
 
 if __name__ == "__main__":
 
-    with open("trainMedium.json") as f:
-        train = json.load(f)
-    with open("testMedium.json") as y:
-        test = json.load(y)
+    with open("source/train.json") as f:
+        data = json.load(f)
+
+    train, test = main.foldData(data, 31818, 7955)
 
     # need to use when doing full dataset or else will hit max recursion depth
     # doesnt cause crash on my machine but may on yours, care
@@ -22,16 +23,16 @@ if __name__ == "__main__":
     # 80 seems to be the cutoff for the large dataset but can go to 90 and only lose about a percent
     filter = 90
     filterIngredients(train, filter)
-    print(filter)
+    print("filter:", filter)
     # removes the recipes with now empty ingredient lists bc they don't help but may negativly effect acc
     train = removeEmptyRecipes(train)
     # put all the ingredent lists in sets, speeds up everything alot
     putIngredientsInSets(train)
 
+    trees = 10
+    print("trees:", trees)
     starttime = timeit.default_timer()
-    # change number 10 to other numbers to increase or decrease the size of the forest
-    forestSize = 10
-    testForest = RandomForest(forestSize, train)
+    testForest = RandomForest(trees, train)
     print("The time difference is :", timeit.default_timer() - starttime)
 
     total = 0
