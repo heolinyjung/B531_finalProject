@@ -126,9 +126,13 @@ if __name__ == '__main__':
     avgForestPer = 0.0
     # desired number of trials
     trials = 10
+    # desired training dataset size
+    train_size = 400
+    # desired testing dataset size
+    test_size = 100
 
     for i in range(trials):
-        train, test = foldData(data, 400, 100)
+        train, test = foldData(data, train_size, test_size)
 
         # testWithoutFilter(train, test)
         results = testWithFilter(train, test)
