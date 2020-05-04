@@ -96,7 +96,7 @@ def testWithoutFilter(train, test):
     return results
 
 
-def testWithFilter(train, test):
+def testWithFilter(train, test, numTrees):
     # ------test with filter------
     train = filterData(train)
     print()
@@ -109,33 +109,24 @@ def testWithFilter(train, test):
     dTreeDur, dTreePer = dTreeTest(train, test)
     print()
     print("Filtered training data random forest test...")
-    forestDur, forestPer = forestTest(train, test, 15)
+    forestDur, forestPer = forestTest(train, test, numTrees)
     print()
     results = (dTreeDur, dTreePer, forestDur, forestPer)
     return results
 
 
-if __name__ == '__main__':
-
-    with open('train.json') as f:
-        data = json.load(f)
-
+def findAverages(data, forestSize, trials, train_size, test_size):
     avgTreeDur = 0.0
     avgTreePer = 0.0
     avgForestDur = 0.0
     avgForestPer = 0.0
-    # desired number of trials
-    trials = 10
-    # desired training dataset size
-    train_size = 400
-    # desired testing dataset size
-    test_size = 100
 
     for i in range(trials):
         train, test = foldData(data, train_size, test_size)
 
-        # testWithoutFilter(train, test)
-        results = testWithFilter(train, test)
+        # results = testWithoutFilter(train, test)
+        # uncomment above and comment below to test without filter
+        results = testWithFilter(train, test, forestSize)
         avgTreeDur += results[0]
         avgTreePer += results[1]
         avgForestDur += results[2]
@@ -149,8 +140,35 @@ if __name__ == '__main__':
     print("Trials:", trials)
     print("Average decision tree duration:", avgTreeDur)
     print("Average decision tree percent correct: " + str(avgTreePer) + "%")
+    print("Forest size:", forestSize)
     print("Average random forest duration:", avgForestDur)
     print("Average random forest percent correct: " + str(avgForestPer) + "%")
+
+
+if __name__ == '__main__':
+
+    # desired training dataset size
+    train_size = 1000
+    # desired testing dataset size
+    test_size = 200
+
+    with open('train.json') as f:
+        data = json.load(f)
+
+    # ------same data, with or without filter------
+
+    train, test = foldData(data, train_size, test_size)
+    testWithoutFilter(train, test)
+    testWithFilter(train, test)
+
+    # ------averages over multiple different datasets------
+
+    # desired forest size
+    forestSize = 15
+    # desired number of trials
+    trials = 5
+
+    findAverages(data, forestSize, trials, train_size, test_size)
 
     # Seems to me like the filter can hugely affect the single decision tree either in a good way or bad while
     # the random forest stays within +-2% with or without filter, meanwhile their execution times are affected
