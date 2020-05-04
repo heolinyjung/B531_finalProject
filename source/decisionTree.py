@@ -16,7 +16,7 @@ example structure of each dictionary in the list:
 }
 """
 
-featureRandomnessFactor = .8
+featureRandomnessFactor = .5
 
 # puts all the ingredients lists in sets instead of lists
 # MAJOR KEY, REDUCES TIMES BY ALOT BC CONSTANT CHECKS IF SOMETHING IN A SET

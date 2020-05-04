@@ -16,6 +16,7 @@ def foldData(data, numTrain, numTest):
         result = (train, test)
         return result
     else:
+        # if this triggers, the desired size of the training + testing sets is larger than the size of the original dataset
         raise ArithmeticError
 
 
@@ -28,8 +29,8 @@ def dTreeTest(train, test):
     duration = timeit.default_timer() - starttime
     print("Test duration:", duration)
 
-    total = 0
-    correct = 0
+    total = 0.0
+    correct = 0.0
     for recipe in test:
         total += 1
         result = root1.test_point(recipe)
@@ -49,8 +50,8 @@ def forestTest(train, test, forestSize):
     duration = timeit.default_timer() - starttime
     print("Test duration:", duration)
 
-    total = 0
-    correct = 0
+    total = 0.0
+    correct = 0.0
     for recipe in test:
         total += 1
         result = testForest.test_point(recipe)
@@ -120,6 +121,10 @@ def findAverages(data, forestSize, trials, train_size, test_size):
     avgTreePer = 0.0
     avgForestDur = 0.0
     avgForestPer = 0.0
+    maxTreePer = 0.0
+    minTreePer = 100.0
+    maxForestPer = 0.0
+    minForestPer = 100.0
 
     for i in range(trials):
         train, test = foldData(data, train_size, test_size)
@@ -132,6 +137,11 @@ def findAverages(data, forestSize, trials, train_size, test_size):
         avgForestDur += results[2]
         avgForestPer += results[3]
 
+        maxTreePer = max(maxTreePer, results[1])
+        minTreePer = min(minTreePer, results[1])
+        maxForestPer = max(maxForestPer, results[3])
+        minForestPer = min(minForestPer, results[3])
+
     avgTreeDur /= trials
     avgTreePer /= trials
     avgForestDur /= trials
@@ -140,15 +150,17 @@ def findAverages(data, forestSize, trials, train_size, test_size):
     print("Trials:", trials)
     print("Average decision tree duration:", avgTreeDur)
     print("Average decision tree percent correct: " + str(avgTreePer) + "%")
+    print("Decision tree deviation:", maxTreePer - minTreePer)
     print("Forest size:", forestSize)
     print("Average random forest duration:", avgForestDur)
     print("Average random forest percent correct: " + str(avgForestPer) + "%")
+    print("Random forest deviation:", maxForestPer - minForestPer)
 
 
 if __name__ == '__main__':
 
     # desired training dataset size
-    train_size = 1000
+    train_size = 800
     # desired testing dataset size
     test_size = 200
 
@@ -157,16 +169,16 @@ if __name__ == '__main__':
 
     # ------same data, with or without filter------
 
-    train, test = foldData(data, train_size, test_size)
-    testWithoutFilter(train, test)
-    testWithFilter(train, test)
+    # train, test = foldData(data, train_size, test_size)
+    # testWithoutFilter(train, test)
+    # testWithFilter(train, test)
 
     # ------averages over multiple different datasets------
 
     # desired forest size
-    forestSize = 15
+    forestSize = 10
     # desired number of trials
-    trials = 5
+    trials = 10
 
     findAverages(data, forestSize, trials, train_size, test_size)
 
@@ -174,7 +186,7 @@ if __name__ == '__main__':
     # the random forest stays within +-2% with or without filter, meanwhile their execution times are affected
     # in similar ways
 
-    # feature randomness
+    # random forest outcomes are much too unpredictable at anything less than
 
     '''
     # change these to the right strings for your system
