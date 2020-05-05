@@ -5,16 +5,26 @@ import timeit
 import numpy as np
 import sys
 import main
+import pickle
 
 if __name__ == '__main__':
     # ---------------------------------------------- Decision Tree Tests -----------------------------------------------------
+    """
+    with open('tree.pickle', "rb") as f:
+        root1 = pickle.load(f)
+    with open('testTree.pickle', "rb") as f:
+        test = pickle.load(f)
+    """
+    """
     with open('source/train.json') as f:
         data = json.load(f)
-    with open('source/train.json') as f:
-        data2 = json.load(f)
-    with open('source/train.json') as f:
-        data3 = json.load(f)
-
+    
+    with open('source/trainLarge.json') as f:
+        train2 = json.load(f)
+    with open('source/testLarge.json') as f:
+        test2 = json.load(f)
+    """
+    """
     # need to use when doing full dataset or else will hit max recursion depth
     # doesnt cause crash on my machine but may on yours, care
     limit = 5
@@ -24,35 +34,29 @@ if __name__ == '__main__':
     # seems to be at about 75% we start to lose accuracy with medium set
     # 80 seems to be the cutoff for the large dataset but can go to 90 and only lose about a percent
     train, test = main.foldData(data, 31818, 7955)
-    train2, test2 = main.foldData(data, 31818, 7955)
-    train3, test3 = main.foldData(data, 31818, 7955)
     # removes the recipes with now empty ingredient lists bc they don't help but may negativly effect acc
-    filter = 70
+    filter = 95
     filterIngredients(train, filter)
-    filterIngredients(train2, filter)
-    filterIngredients(train3, filter)
+    # filterIngredients(train2, filter)
     train = removeEmptyRecipes(train)
-    train2 = removeEmptyRecipes(train2)
-    train3 = removeEmptyRecipes(train3)
+    # train2 = removeEmptyRecipes(train2)
     # put all the ingredent lists in sets, speeds up everything alot
     putIngredientsInSets(train)
-    putIngredientsInSets(train2)
-    putIngredientsInSets(train3)
+    # putIngredientsInSets(train2)
 
     root1 = decisionTreeNode()
     root2 = decisionTreeNode()
-    root3 = decisionTreeNode()
 
     starttime = timeit.default_timer()
     root1.makeDecisionTree(train)
     print("The time difference is :", timeit.default_timer() - starttime)
+    """
+    """
     starttime = timeit.default_timer()
     root2.makeDecisionTree(train2)
     print("The time difference is :", timeit.default_timer() - starttime)
-    starttime = timeit.default_timer()
-    root3.makeDecisionTree(train3)
-    print("The time difference is :", timeit.default_timer() - starttime)
-        
+    """
+    """
     total = 0
     correct = 0
     for recipe in test:
@@ -61,7 +65,8 @@ if __name__ == '__main__':
         if result == recipe['cuisine']:
             correct += 1
     print("Decision tree percentage correct = " + str((correct/total) * 100) + "%")
-
+    """
+    """
     total = 0
     correct = 0
     for recipe in test2:
@@ -70,15 +75,13 @@ if __name__ == '__main__':
         if result == recipe['cuisine']:
             correct += 1
     print("Decision tree percentage correct = " + str((correct/total) * 100) + "%")
-
-    total = 0
-    correct = 0
-    for recipe in test3:
-        total += 1
-        result = root3.test_point(recipe)
-        if result == recipe['cuisine']:
-            correct += 1
-    print("Decision tree percentage correct = " + str((correct/total) * 100) + "%")
+    """
+    """
+    with open('tree.pickle', 'wb') as f:
+        pickle.dump(root1, f)
+    with open('testTree.pickle', 'wb') as f:
+        pickle.dump(test, f)
+    """
     
     # ---------------------------------------------- Decision Tree Tests -----------------------------------------------------
     """

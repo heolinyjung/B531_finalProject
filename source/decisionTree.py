@@ -321,7 +321,7 @@ class decisionTreeNode:
         if self.cuisineClassification is not None:
             return self.cuisineClassification
         else:
-            if self.ingredientSplit in recipe['ingredients']:
+            if self.ingredientSplit in recipe["ingredients"]:
                 return self.trueBranch.test_point(recipe)
             else:
                 return self.falseBranch.test_point(recipe)
@@ -354,7 +354,6 @@ class decisionTreeNode:
             return treeString.partition("[")
         else:
             self.ingredientSplit = (re.match("(.*?)]", treeString).group())
-
     """
         
 
