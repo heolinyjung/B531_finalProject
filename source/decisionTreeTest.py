@@ -9,22 +9,17 @@ import pickle
 
 if __name__ == '__main__':
     # ---------------------------------------------- Decision Tree Tests -----------------------------------------------------
+    # loads pickled models 
     """
     with open('tree.pickle', "rb") as f:
         root1 = pickle.load(f)
     with open('testTree.pickle', "rb") as f:
         test = pickle.load(f)
     """
-    """
+    
     with open('source/train.json') as f:
         data = json.load(f)
-    
-    with open('source/trainLarge.json') as f:
-        train2 = json.load(f)
-    with open('source/testLarge.json') as f:
-        test2 = json.load(f)
-    """
-    """
+
     # need to use when doing full dataset or else will hit max recursion depth
     # doesnt cause crash on my machine but may on yours, care
     limit = 5
@@ -45,18 +40,13 @@ if __name__ == '__main__':
     # putIngredientsInSets(train2)
 
     root1 = decisionTreeNode()
-    root2 = decisionTreeNode()
 
+    # makes the tree and times it
     starttime = timeit.default_timer()
     root1.makeDecisionTree(train)
     print("The time difference is :", timeit.default_timer() - starttime)
-    """
-    """
-    starttime = timeit.default_timer()
-    root2.makeDecisionTree(train2)
-    print("The time difference is :", timeit.default_timer() - starttime)
-    """
-    """
+
+    # tests trained model
     total = 0
     correct = 0
     for recipe in test:
@@ -65,17 +55,8 @@ if __name__ == '__main__':
         if result == recipe['cuisine']:
             correct += 1
     print("Decision tree percentage correct = " + str((correct/total) * 100) + "%")
-    """
-    """
-    total = 0
-    correct = 0
-    for recipe in test2:
-        total += 1
-        result = root2.test_point(recipe)
-        if result == recipe['cuisine']:
-            correct += 1
-    print("Decision tree percentage correct = " + str((correct/total) * 100) + "%")
-    """
+
+    # pickles models for later use
     """
     with open('tree.pickle', 'wb') as f:
         pickle.dump(root1, f)

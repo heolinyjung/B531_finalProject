@@ -259,6 +259,7 @@ def calculateEntropy(recipes, cuisineAmounts=None):
     return entropy
 
 # calculates the information gain of the set of recipes using the ingredient param as the target variable
+# time - O(ingredients)
 def calculateInformationGain(recipes, ingredient, cuisineAmounts=None, recipeListsWithAndWithout=None):
     totalRecipes = len(recipes)
 
@@ -315,17 +316,6 @@ class decisionTreeNode:
         self.ingredientSplit = ingredientSplit
         self.cuisineClassification = cuisineClassification
 
-    # classifies a recipe using a the self param decision tree and return the classification (string)
-    # O(tree depth)
-    def test_point(self, recipe):
-        if self.cuisineClassification is not None:
-            return self.cuisineClassification
-        else:
-            if self.ingredientSplit in recipe["ingredients"]:
-                return self.trueBranch.test_point(recipe)
-            else:
-                return self.falseBranch.test_point(recipe)
-
     # writes a tree to a text file with the given file name
     def writeTreeToFile(self, fileName):
         file = open("source/" + fileName + ".txt", "w")
@@ -341,28 +331,20 @@ class decisionTreeNode:
             # marks that this a cuisine and not an ingredient
             return "_" + self.cuisineClassification
 
-    # turns the given tree into the tree stored in the file with the given file name
-    def loadTreeFromFile(self, fileName):
-        file = open("source/" + fileName + ".txt", "r")
-        treeString = file.readline()
-        file.close()
-        # self.makeTreeFromString(treeString)
-
-    """
-    def makeTreeFromString(self, treeString):
-        if treeString[:1] == "_":
-            return treeString.partition("[")
+    # classifies a recipe using a the self param decision tree and return the classification (string)
+    # O(tree depth)
+    def test_point(self, recipe):
+        if self.cuisineClassification is not None:
+            return self.cuisineClassification
         else:
-            self.ingredientSplit = (re.match("(.*?)]", treeString).group())
-    """
-        
+            if self.ingredientSplit in recipe["ingredients"]:
+                return self.trueBranch.test_point(recipe)
+            else:
+                return self.falseBranch.test_point(recipe)
 
-    """
-    return the root of a decision tree built using recipes in the recipes param
-    """
-    # uses information gain with no precomputation
-    # time (not accurate anymore) - O(nodes(2recipes + ingredients + uIngredients))
-    # space (not accurate anymore) - O(nodes * (2cuisine types + unique ingredients + recipes))
+    # returns the root of a decision tree built using recipes in the recipes param, uses info gain
+    # time - O(nodes(unique ingredients * ingredients + 2recipes + ingredients + unique ingredients))
+    # space - O(nodes(unique ingredients + recipes))
     def makeDecisionTree(self, recipes):
         cuisineCounts = getCuisineAmounts(recipes)
         uniqueIngredients = getUniqueIngredients(recipes)
