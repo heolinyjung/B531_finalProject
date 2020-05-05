@@ -87,14 +87,5 @@ def NearestNeighbor(X, y):
         print("Nearest Neighbors Prediction accuracy", classifier1.score(X[test], y[test]))
 
 
-with open('train.json') as f:
-    train = json.load(f)
-        # train is now a dictionary with keys : 'id', 'cuisine', 'ingredients'
-with open('test.json') as f2:
-    test = json.load(f2)
 
-X, y = makeData(train)
 
-SVM(X, y)
-NearestNeighbor(X, y)
-MLP(X, y)
