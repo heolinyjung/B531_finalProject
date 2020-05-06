@@ -84,16 +84,15 @@ if __name__ == '__main__':
     # id is assigned to the recipe id (int)
     # cuisine is assigned to the cuisine type (string)
     # ingredients is assigned to the list of ingredients (list of strings)
-    with open('source/train.json') as f:
-        train = json.load(f)
-    with open('source/test.json') as f2:
-        test = json.load(f2)
+    try:
+        with open('train.json') as f:
+            train = json.load(f)
+        with open('test.json') as f2:
+            test = json.load(f2)
+    except FileNotFoundError:
+        with open('source/train.json') as f:
+            train = json.load(f)
+        with open('source/test.json') as f2:
+            test = json.load(f2)
 
     getStats(train, test)
-
-    with open('trainMedium.json') as f3:
-        trainM = json.load(f3)
-    with open('testMedium.json') as f4:
-        testM = json.load(f4)
-
-    getStats(trainM, testM)

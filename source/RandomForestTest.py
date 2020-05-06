@@ -8,6 +8,7 @@ import main
 import pickle
 
 if __name__ == "__main__":
+    # opens and tests pickled model
     """
     with open('source/75Filter30TreeForest.pickle', "rb") as f:
        forest1 = pickle.load(f)
@@ -27,6 +28,7 @@ if __name__ == "__main__":
     print(forest1.test_point(testRecipe))
     
     """
+
     with open("source/train.json") as f:
         data = json.load(f)
     
@@ -48,12 +50,14 @@ if __name__ == "__main__":
     # put all the ingredent lists in sets, speeds up everything alot
     putIngredientsInSets(train)
 
+    # makes a forest with so many trees
     trees = 30
     print("trees:", trees)
     starttime = timeit.default_timer()
     forest1 = RandomForest(trees, train)
     print("The time difference is :", timeit.default_timer() - starttime)
 
+    # tests forest
     total = 0
     correct = 0
     for recipe in testForest1:
@@ -63,8 +67,11 @@ if __name__ == "__main__":
             correct += 1
     print("Random forest percentage correct = " + str((correct / total) * 100) + "%")
 
+    # pickles model for later use
+    """
     with open('source/TreeForest.pickle', 'wb') as f:
         pickle.dump(forest1, f)
     with open('source/ForestTest.pickle', 'wb') as f:
         pickle.dump(testForest1, f)
+    """
     
