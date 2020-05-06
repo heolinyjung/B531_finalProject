@@ -13,9 +13,9 @@ if __name__ == '__main__':
             forest = pickle.load(f)
     
     print()
-    print("Here is a list of the 20 cuisine classifications your cusisine can be classified as:")
+    print("Here is a list of the 20 cuisine classifications your recipe can be classified as:")
     print("Greek, Southern US, Filipino, Indian, Jamaican, Spanish, Italian, Mexican, Chinese, British")
-    print("Thai, Vietnamese, Cajun/Creole, Bazilian, French, Japanese, Irish, Korean, Moroccan, Russian")
+    print("Thai, Vietnamese, Cajun/Creole, Brazilian, French, Japanese, Irish, Korean, Moroccan, Russian")
     print()
 
     print("Please enter a list of ingredients separated by commas and then press enter the run the model on those ingredients.")
@@ -34,7 +34,7 @@ if __name__ == '__main__':
             print("Please enter Y or y for yes and N or n for no.")
     print()
 
-    mockRecipe = {"ingredients"  : cleanIngredientList}
+    mockRecipe = {"ingredients" : cleanIngredientList}
     resultCounts = dict()
     total = 0
     for tree in forest.forest:

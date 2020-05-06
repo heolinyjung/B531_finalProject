@@ -172,22 +172,52 @@ if __name__ == '__main__':
         with open('source/train.json') as f:
             data = json.load(f)
 
-    # desired forest size
-    forestSize = 3
+    print("\n---- Welcome to the Recipe Classifier ----\n"
+          "By: Mary Ann Hazuga, Heoliny Jung, Joe Soellner\n")
+    cont = False
+    forest_size = 0
+    isForest = ''
+    numTrials = 0
+    while not cont:
+        isForest = input(
+            "Enter 'S' to test a single decision tree and forest (over the same dataset)\n"
+            "Enter 'A' to test both over a number of trials (with different datasets)\n")
+        forest_size = int(input("Please enter the forest size (amount of trees per forest): "))
+        if isForest == 'A' or isForest == 'a':
+            numTrials = int(input("Enter desired number of trials: "))
+            cont = True
+        elif isForest == 'S' or isForest == 's':
+            cont = True
+        else:
+            print("**Not a valid input, try again**\n")
+
+    train_size = 0
+    test_size = 0
+    cont = False
+    while not cont:
+        selection = int(input("Please select a dataset size from 1-39000:\n"))
+        if 0 < selection < 39000:
+            train_size = int(selection - selection/5)
+            test_size = int(selection/5)
+            print("Training on "+str(train_size)+" points\nTesting on "+str(test_size)+" points...")
+            if isForest == 'S' or isForest == 's':
+                train, test = foldData(data, train_size, test_size)
+                testWithFilter(train, test, forest_size)
+            else:
+                findAverages(data, forest_size, numTrials, train_size, test_size)
+            cont = True
+        else:
+            print("**Not a valid input, try again**")
+    print("Test complete.")
 
     # ------full test------
 
-    train_size = len(data) - int(len(data)/5)
-    test_size = int(len(data)/5) - 1
-    train, test = foldData(data, train_size, test_size)
-    testWithFilter(train, test, forestSize)
+    # train_size = len(data) - int(len(data)/5)
+    # test_size = int(len(data)/5) - 1
+    # train, test = foldData(data, train_size, test_size)
+    # testWithFilter(train, test, forestSize)
 
     # ---------------------
-
-    # desired train size
-    train_size = 3600
-    # desired test size
-    test_size = 800
 
     # ------same data, with or without filter------
 
@@ -198,7 +228,7 @@ if __name__ == '__main__':
     # ------averages over multiple different datasets------
 
     # desired number of trials
-    trials = 10
+    # trials = 10
 
     # findAverages(data, forestSize, trials, train_size, test_size)
 
@@ -216,7 +246,7 @@ if __name__ == '__main__':
     # With filter, @ 1600/400, 30 trees, 10 trials = 42.65% acc, avg dur = 103.9, dev = 9.5 (control = 37.05% acc, 4.42)
     # With filter, @ 1600/400, 50 trees, 10 trials = 44.75% acc, avg dur = 174.14, dev = 6.5 (control = 37.125% acc, 4.44)
     # ^^ Only difference between number of trees is deviation (maybe) ^^
-    # With filter, @ 3200/800, 20 trees, 10 trials = 42.65% acc, avg dur = 103.9 (control = 37.05% acc, 4.42)
+    # With filter, @ 4000/1000, 30 trees, 1 trial = 51.7% acc, dur = 562.65 (control = 45.1% acc, 24.324)
 
 
 
@@ -225,19 +255,7 @@ if __name__ == '__main__':
 if __name__ == '__main__':
     # change these to the right strings for your system
 
-    print("\n---- Welcome to the Recipe Classifier ----\nBy: Mary Ann Hazuga, Heoliny Jung, Joe Soellner\n")
-    cont = False
-    forest_size = 0
-    isForest = ''
-    while not cont:
-        isForest = input("Would you like to test a single decision tree or a random forest?\n(tree = 'T', forest = 'F')\n")
-        if isForest == 'F' or isForest == 'f':
-            forest_size = int(input("Please enter the size of your forest:\n"))
-            cont = True
-        elif isForest == 'T' or isForest == 't':
-            cont = True
-        else:
-            print("**Not a valid input, try again**")
+    
 
     cont = False
     while not cont:

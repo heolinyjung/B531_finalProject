@@ -230,8 +230,8 @@ def getIngredientsWithRecipesAndCuisineAmounts(recipes):
 
     return (ingredientsAndRecipes, cuisineCounts)
 
-# introduces feature randomness by giving the tree a random set of len(cuisines)/2 choices (unique) from the original
-# maybe try changing or randomizing the number of choices rather than just 1/2 the amount of choices
+# introduces feature randomness by giving the tree a random set of len(cuisines) * featureRandomnessFactor choices
+# (unique) from the original.
 def cuisineCountsWithFeatureRandomness(cuisineOccurenceForAllIngredients):
     if len(cuisineOccurenceForAllIngredients) <= 1:
         return cuisineOccurenceForAllIngredients
