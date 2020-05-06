@@ -17,4 +17,9 @@ that our random forest performed the best out of all the algorithms, reporting a
 **Running the demos:**
 
 To see the algorithm in action, we have provided a few options for testing. The first is the 
-main.py module, which will
+main.py module, which will allow you to choose a dataset size and whether you would like to batch
+test or test a single tree/forest. This code generates a new forest when ran, so larger dataset sizes
+will take a long time to run.
+
+The second is demo.py, which will allow you to enter in your own recipes to our pre-compiled model.
+This model was run on the entire training dataset and has a general accuracy of around 61%.
