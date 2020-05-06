@@ -246,7 +246,9 @@ if __name__ == '__main__':
     # With filter, @ 1600/400, 30 trees, 10 trials = 42.65% acc, avg dur = 103.9, dev = 9.5 (control = 37.05% acc, 4.42)
     # With filter, @ 1600/400, 50 trees, 10 trials = 44.75% acc, avg dur = 174.14, dev = 6.5 (control = 37.125% acc, 4.44)
     # ^^ Only difference between number of trees is deviation (maybe) ^^
-    # With filter, @ 4000/1000, 30 trees, 1 trial = 51.7% acc, dur = 562.65 (control = 45.1% acc, 24.324)
+    # With filter, @ 3000, 30 trees, 4 trials = 46.92% acc, avg dur = 249.53 (control = 39.75% acc, 10.58)
+    # With filter, @ 4000, 30 trees, 4 trials = 48.84% acc, avg dur = 439.89 (control = 41.25% acc, 17.5)
+    # With filter, @ 5000, 30 trees, 4 trials = 50.45% acc, avg dur = 573.64 (control = 43.575% acc, 23.66)
 
 
 
