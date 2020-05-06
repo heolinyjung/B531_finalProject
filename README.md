@@ -21,5 +21,5 @@ main.py module, which will allow you to choose a dataset size and whether you wo
 test or test a single tree/forest. This code generates a new forest when ran, so larger dataset sizes
 will take a long time to run.
 
-The second is demo.py, which will allow you to enter in your own recipes to our pre-compiled model.
+The second is demo.py, which will allow you to enter in your own recipes into our pre-built model to be classified with a cuisine type.
 This model was run on the entire training dataset and has a general accuracy of around 61%.
